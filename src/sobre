@@ -1,0 +1,5 @@
+Sobre o projeto
+
+Este é um projeto MVC composto de dois CRUDs (Fornecedor e Produto) que utiliza: 
+- as tecnologias JSP, Servlets, JDBC, HTML, CSS, JavaScript, jQuery e Foundation;
+- os padrões de projeto Command, DAO e Facade (que são os nossos serviços);

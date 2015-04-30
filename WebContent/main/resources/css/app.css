@@ -1,0 +1,65 @@
+/*FOUNDATION CLASS*/
+.row-app {
+  width: 100%;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 82.5rem; }
+  .row-app:before, .row-app:after {
+    content: " ";
+    display: table; }
+  .row-app:after {
+    clear: both; }
+  .row-app.collapse > .column,
+  .row-app.collapse > .columns {
+    padding-left: 0;
+    padding-right: 0; }
+  .row-app.collapse .row-app {
+    margin-left: 0;
+    margin-right: 0; }
+  .row-app .row-app {
+    width: auto;
+    margin-left: -0.9375rem;
+    margin-right: -0.9375rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: none; }
+    .row-app .row-app:before, .row-app .row-app:after {
+      content: " ";
+      display: table; }
+    .row-app .row-app:after {
+      clear: both; }
+    .row-app .row-app.collapse {
+      width: auto;
+      margin: 0;
+      max-width: none; }
+      .row-app .row-app.collapse:before, .row-app .row-app.collapse:after {
+        content: " ";
+        display: table; }
+      .row-app .row-app.collapse:after {
+        clear: both; }
+        
+/*HTML IDs*/
+#container {
+	height: 84%;
+}
+
+#side-bar {
+	background-color: #eee;
+	height: 100%;
+}
+
+/*HTML TAGS*/
+footer {
+	border-top: 1px solid #ccc;
+	padding: 10px 5px 5px 0px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	background-color: #545454;
+	color: #fff;
+	box-shadow: 2px 2px 2px #ccc
+}
+
+table {
+	width: 98%;
+}

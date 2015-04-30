@@ -21,14 +21,14 @@ Para saber mais:
 Uma sugestão para ampliar o aprendizado é tentar implementar o padrão de projeto Facade no projeto e ler a respeito das tecnologias e padrões
 utilizados.
 
-MVC: http://www.caelum.com.br/apostila-java-web/mvc-model-view-controller/
-Command: http://www.devmedia.com.br/padrao-de-projeto-command-em-java/26456
-DAO: https://sergiotaborda.wordpress.com/desenvolvimento-de-software/java/patterns/dao/
-Singleton: http://www.devmedia.com.br/padrao-de-projeto-singleton-em-java/26392
-Facade: http://www.devmedia.com.br/padrao-de-projeto-facade-em-java/26476
-HTML 5: http://www.w3schools.com/html/html5_intro.asp http://flatschart.com/html5/formulario_estados2.html
-Foundation: http://foundation.zurb.com/docs/ 
-CSS 3: http://www.w3schools.com/css/css3_intro.asp http://www.w3c.br/Cursos/CursoCSS3
-Servlets: http://www.caelum.com.br/apostila-java-web/servlets/
+- MVC: http://www.caelum.com.br/apostila-java-web/mvc-model-view-controller/
+- Command: http://www.devmedia.com.br/padrao-de-projeto-command-em-java/26456
+- DAO: https://sergiotaborda.wordpress.com/desenvolvimento-de-software/java/patterns/dao/
+- Singleton: http://www.devmedia.com.br/padrao-de-projeto-singleton-em-java/26392
+- Facade: http://www.devmedia.com.br/padrao-de-projeto-facade-em-java/26476
+- HTML 5: http://www.w3schools.com/html/html5_intro.asp http://flatschart.com/html5/formulario_estados2.html
+- Foundation: http://foundation.zurb.com/docs/ 
+- CSS 3: http://www.w3schools.com/css/css3_intro.asp http://www.w3c.br/Cursos/CursoCSS3
+- Servlets: http://www.caelum.com.br/apostila-java-web/servlets/
 http://www.caelum.com.br/apostila-java-web/javaserver-pages/
 

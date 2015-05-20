@@ -1,7 +1,7 @@
 # produto-crud-jsp
 Sobre o projeto
 
-Esta é uma aplicação Java Web desenvolvida na arquitetura MVC e é composta de dois CRUDs (Fornecedor e Produto).
+Esta é uma aplicação Java Web desenvolvida na arquitetura MVC e é composta de dois CRUDs (Fornecedor e Produto). O projeto tem o objetivo de apresentar as tecnologias, abaixo citadas, como uma introdução/guia aos iniciantes no desenvolvimento java para web.
 
 As tecnologias usadas na aplicação são: 
 - JSP,

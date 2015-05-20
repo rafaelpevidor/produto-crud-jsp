@@ -6,9 +6,6 @@
 <title>Produto CRUD</title>
 </head>
 <body>
-	Produto CRUD<br>
-	
-	<a href="/produto-crud-jsp/main/fornecedor/listafornecedor.jsp">Nossos fornecedores</a>
-	<a href="/produto-crud-jsp/main/fornecedor/inserefornecedor.jsp">Incluir fornecedor</a>
+	<%response.sendRedirect("/produto-crud-jsp/application/vendor/listvendor.jsp"); %>
 </body>
 </html>

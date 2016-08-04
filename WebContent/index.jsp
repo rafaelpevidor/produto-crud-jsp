@@ -6,6 +6,6 @@
 <title>Produto CRUD</title>
 </head>
 <body>
-	<%response.sendRedirect("/produto-crud-jsp/application/vendor/listvendor.jsp"); %>
+	<%response.sendRedirect("/produto-crud-jsp/app/fornecedor/lista.jsp"); %>
 </body>
 </html>

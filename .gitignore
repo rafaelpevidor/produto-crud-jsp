@@ -7,3 +7,5 @@
 /.tern-project
 /.classpath
 /build/.gitignore
+/bin/
+/build/

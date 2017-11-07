@@ -11,23 +11,28 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.psystems.crud.base.BaseCommand;
-import br.com.psystems.crud.bind.BindFactory;
-import br.com.psystems.crud.command.AdicionarFornecedorCommand;
-import br.com.psystems.crud.command.AdicionarProdutoCommand;
-import br.com.psystems.crud.command.ApagarFornecedorCommand;
-import br.com.psystems.crud.command.ApagarProdutoCommand;
-import br.com.psystems.crud.command.AtualizarFornecedorCommand;
-import br.com.psystems.crud.command.AtualizarProdutoCommand;
-import br.com.psystems.crud.command.BuscarFornecedorCommand;
-import br.com.psystems.crud.command.BuscarProdutoCommand;
-import br.com.psystems.crud.command.ListaFornecedorCommand;
-import br.com.psystems.crud.command.ListaProdutoCommand;
-import br.com.psystems.crud.command.PesquisarFornecedorCommand;
-import br.com.psystems.crud.command.PesquisarProdutoCommand;
+import br.com.psystems.crud.controller.bind.ProductBind;
+import br.com.psystems.crud.controller.bind.VendorBind;
+import br.com.psystems.crud.controller.command.AddProductCommand;
+import br.com.psystems.crud.controller.command.AddVendorCommand;
+import br.com.psystems.crud.controller.command.BaseCommand;
+import br.com.psystems.crud.controller.command.DeleteProductCommand;
+import br.com.psystems.crud.controller.command.DeleteVendorCommand;
+import br.com.psystems.crud.controller.command.FindProductCommand;
+import br.com.psystems.crud.controller.command.FindVendorCommand;
+import br.com.psystems.crud.controller.command.ListProductCommand;
+import br.com.psystems.crud.controller.command.ListVendorCommand;
+import br.com.psystems.crud.controller.command.SearchProductCommand;
+import br.com.psystems.crud.controller.command.SearchVendorCommand;
+import br.com.psystems.crud.controller.command.UpdateProductCommand;
+import br.com.psystems.crud.controller.command.UpdateVendorCommand;
 import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.infra.DAOFactory;
-import br.com.psystems.crud.util.Constants;
+import br.com.psystems.crud.infra.ConnectionFactory;
+import br.com.psystems.crud.infra.ConnectionManager;
+import br.com.psystems.crud.infra.ConnectionFactory.SchemaEnum;
+import br.com.psystems.crud.model.dao.ProductDAO;
+import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.util.ConstantsUtils;
 
 /**
  * Servlet implementation class MainServlet
@@ -43,25 +48,28 @@ public class AppServlet extends HttpServlet {
         super();
     }
     
-    private Map<String, BaseCommand> getActions() {
+    private Map<String, BaseCommand> getActions() throws DAOException {
     	Map<String, BaseCommand> actions = new HashMap<String, BaseCommand>();
-		try {
-			actions.put(Constants.CREATE_FORNECEDOR, new AdicionarFornecedorCommand(DAOFactory.getFornecedorDAO(), BindFactory.getFornecedorBind()));
-			actions.put(Constants.RECOVER_FORNECEDOR, new BuscarFornecedorCommand(DAOFactory.getFornecedorDAO()));
-			actions.put(Constants.UPDATE_FORNECEDOR, new AtualizarFornecedorCommand(DAOFactory.getFornecedorDAO(), BindFactory.getFornecedorBind()));
-			actions.put(Constants.DELETE_FORNECEDOR, new ApagarFornecedorCommand(DAOFactory.getFornecedorDAO()));
-			actions.put(Constants.SEARCH_FORNECEDOR, new PesquisarFornecedorCommand(DAOFactory.getFornecedorDAO()));
-			actions.put(Constants.LIST_FORNECEDOR, new ListaFornecedorCommand(DAOFactory.getFornecedorDAO()));
-			actions.put(Constants.CREATE_PRODUTO, new AdicionarProdutoCommand(DAOFactory.getProdutoDAO(), BindFactory.getProdutoBind()));
-			actions.put(Constants.RECOVER_PRODUTO, new BuscarProdutoCommand(DAOFactory.getProdutoDAO()));
-			actions.put(Constants.UPDATE_PRODUTO, new AtualizarProdutoCommand(DAOFactory.getProdutoDAO(), BindFactory.getProdutoBind()));
-			actions.put(Constants.DELETE_PRODUTO, new ApagarProdutoCommand(DAOFactory.getProdutoDAO()));
-			actions.put(Constants.SEARCH_PRODUTO, new PesquisarProdutoCommand(DAOFactory.getProdutoDAO()));
-			actions.put(Constants.LIST_PRODUTO, new ListaProdutoCommand(DAOFactory.getProdutoDAO()));
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		actions.put(ConstantsUtils.CREATE_FORNECEDOR, new AddVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new VendorBind()));
+		actions.put(ConstantsUtils.RECOVER_FORNECEDOR, new FindVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.UPDATE_FORNECEDOR, new UpdateVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new VendorBind()));
+		actions.put(ConstantsUtils.DELETE_FORNECEDOR, new DeleteVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.SEARCH_FORNECEDOR, new SearchVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.LIST_FORNECEDOR, new ListVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
+		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
+		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
+		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
+		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+	
     	return actions;
     }
 
@@ -70,11 +78,17 @@ public class AppServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String actionStr = (String) request.getAttribute(Constants.CMD_ATTRIBUTE);
-		BaseCommand action = getActions().get(actionStr);
+		String actionStr = (String) request.getAttribute(ConstantsUtils.CMD_ATTRIBUTE);
+		BaseCommand action;
+		try {
+			action = getActions().get(actionStr);
+			RequestDispatcher rd = request.getRequestDispatcher(action.execute(request));
+			rd.forward(request, response);
+		} catch (DAOException e) {
+			// TODO redirecionar para uma página de erro
+			e.printStackTrace();
+		}
 		
-		RequestDispatcher rd = request.getRequestDispatcher(action.execute(request));
-		rd.forward(request, response);
 	}
 
 	/**

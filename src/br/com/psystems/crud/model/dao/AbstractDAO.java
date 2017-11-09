@@ -7,14 +7,17 @@ import java.util.List;
 
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
+import br.com.psystems.crud.infra.ConnectionFactory;
 import br.com.psystems.crud.infra.ConnectionManager;
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 import br.com.psystems.crud.model.BaseEntity;
 
 abstract class AbstractDAO <T extends BaseEntity> {
 
-	public AbstractDAO(ConnectionManager transactionManager) {
-		this.connectionManager = transactionManager;
+	public AbstractDAO() throws DAOException {
+		this.connectionManager = new ConnectionManager();
 	}
+	
 	public abstract void save(T entity) throws DAOException, SystemException;
 	public abstract T update(T entity) throws DAOException, SystemException;
 	public abstract void delete(Long id) throws DAOException, SystemException;

@@ -21,8 +21,7 @@ import org.junit.Test;
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionFactory;
-import br.com.psystems.crud.infra.ConnectionFactory.SchemaEnum;
-import br.com.psystems.crud.infra.ConnectionManager;
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 import br.com.psystems.crud.model.RoleEnum;
 import br.com.psystems.crud.model.User;
 import br.com.psystems.crud.model.dao.UserDAO;
@@ -45,7 +44,17 @@ public class UserDAOTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
+		PreparedStatement ps = con.prepareStatement(getDropTableSQL());
+		ps.execute();
+		con.commit();
+		con.close();
 		
+		Connection con2 = ConnectionFactory.getConnection(EnviromentEnum.HML);
+		PreparedStatement ps2 = con2.prepareStatement(getCreateTableSQL());
+		ps2.execute();
+		con2.commit();
+		con2.close();
 	}
 
 	/**
@@ -53,28 +62,48 @@ public class UserDAOTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		dao = new UserDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.HML)));
+		dao = getDAO();
 	}
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@After
-	public void tearDown() throws Exception {
-		Connection con = ConnectionFactory.getConnection(SchemaEnum.HML);
-		PreparedStatement ps = con.prepareStatement("DROP TABLE tb_user;");
-		ps.execute();
-		con.commit();
-		con.close();
-		logger.info("Conexão com o banbo de dados fechada com sucesso.");
-	}
+	public void tearDown() throws Exception {}
 
 	/**
 	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#delete(java.lang.Long)}.
 	 */
 	@Test
-	public void testDelete() {
-		fail("Not yet implemented");
+	public void testDelete() throws DAOException, SystemException, SQLException {
+		User user = new UserBuilder()
+				.withEmail("u_"+ALIAS+"@email.com")
+				.withName("User Name " + ALIAS)
+				.withPassword("password_"+ALIAS)
+				.withRole(RoleEnum.ADMIN)
+				.build();
+		
+		dao.save(user);
+		
+		Long id = getId();
+		
+		user = null;
+		dao = getDAO();
+		user = dao.findById(id);
+		
+		Assert.assertNotNull(user);
+		Assert.assertTrue(user.getId().equals(id));
+		
+		dao.delete(id);
+		
+		dao = getDAO();
+		user = dao.findById(id);
+		
+		Assert.assertNull(user);
+	}
+
+	private UserDAO getDAO() throws DAOException {
+		return new UserDAO();
 	}
 
 	/**
@@ -103,14 +132,14 @@ public class UserDAOTest {
 		
 		dao.save(user);
 		
-		Long nextId = getId();
+		Long id = getId();
 		
 		user = null;
-		dao = new UserDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.HML)));
-		user = dao.findById(nextId);
+		dao = getDAO();
+		user = dao.findById(id);
 		
 		Assert.assertNotNull(user);
-		Assert.assertTrue(user.getId().equals(nextId));
+		Assert.assertTrue(user.getId().equals(id));
 	}
 
 	/**
@@ -147,12 +176,11 @@ public class UserDAOTest {
 
 	private Long getId() throws DAOException, SQLException {
 		Long nextId = null;
-		Connection con = ConnectionFactory.getConnection(SchemaEnum.HML);
+		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
 		PreparedStatement ps = con.prepareStatement("select nextval(pg_get_serial_sequence('tb_user', 'id')) as new_id");
 		ResultSet rs = ps.executeQuery();
+
 		while (rs.next()) {
-			Object obj = rs.getObject(1);
-			System.out.println(obj);
 			nextId = rs.getLong(1);
 			nextId--;
 		}
@@ -164,17 +192,20 @@ public class UserDAOTest {
 		return nextId;
 	}
 	
-	private String getCreateTableSQL() {
+	private static String getCreateTableSQL() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("CREATE TABLE public.tb_user)");
-		sb.append("CREATE TABLE public.tb_user)");
-		sb.append("CREATE TABLE public.tb_user)");
-		sb.append("CREATE TABLE public.tb_user)");
-		
-		sb.append("CREATE TABLE public.tb_user)");
-		sb.append("CREATE TABLE public.tb_user)");
-		
+		sb.append("CREATE TABLE tb_user ( ");
+		sb.append("id serial NOT NULL, ");
+		sb.append("name character varying(255) NOT NULL, ");
+		sb.append("mail character varying(255) NOT NULL, ");
+		sb.append("password character varying(255) NOT NULL, ");
+		sb.append("role character varying(10) NOT NULL, ");
+		sb.append("CONSTRAINT pk_tb_user PRIMARY KEY (id)) ");
 		
 		return sb.toString();
+	}
+	
+	private static String getDropTableSQL() {
+		return "DROP TABLE tb_user";
 	}
 }

@@ -26,8 +26,9 @@ public class ProductDAO extends AbstractDAO<Product> {
 	
 	
 
-	public ProductDAO(ConnectionManager transactionManager) {
-		super(transactionManager);
+	public ProductDAO() throws DAOException {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	private static final String SQL_INSERT = "INSERT INTO tb_product (vendor_id, name, color, reference, lot, amount, cost, price, description) VALUES (?,?,?,?)";

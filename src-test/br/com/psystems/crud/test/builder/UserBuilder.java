@@ -16,7 +16,7 @@ public class UserBuilder {
 		user = new User();
 	}
 
-	protected User user;
+	private User user;
 	
 	public UserBuilder withName(String name) {
 		user.setName(name);

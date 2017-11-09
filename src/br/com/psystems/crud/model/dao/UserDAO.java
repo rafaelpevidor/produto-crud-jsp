@@ -24,9 +24,10 @@ import br.com.psystems.crud.model.User;
  *
  */
 public class UserDAO extends AbstractDAO<User> {
-
-	public UserDAO(ConnectionManager transactionManager) {
-		super(transactionManager);
+	
+	public UserDAO() throws DAOException {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	private static Logger logger = Logger.getLogger(UserDAO.class);

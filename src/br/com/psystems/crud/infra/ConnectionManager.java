@@ -3,13 +3,18 @@
  */
 package br.com.psystems.crud.infra;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 
 /**
  * @author developer
@@ -19,10 +24,6 @@ public class ConnectionManager {
 	
 	private static Logger logger = Logger.getLogger(ConnectionManager.class);
 	
-	public ConnectionManager(Connection connection) {
-		this.connection = connection;
-	}
-
 	private Connection connection;
 	
 	public void doInTransaction(TransactionCallback callback) throws DAOException, SystemException {
@@ -42,9 +43,24 @@ public class ConnectionManager {
 	}
 	
 	public Connection getConnection() throws DAOException {
+		if (null == connection) {
+			connection = ConnectionFactory.getConnection(getEnviroment());
+		}
 		return connection;
 	}
 	
+	private EnviromentEnum getEnviroment() {
+		Properties propertiesFile = new Properties();
+		try {
+			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));
+			return EnviromentEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public void closeConnection() throws DAOException {
 
 		try {

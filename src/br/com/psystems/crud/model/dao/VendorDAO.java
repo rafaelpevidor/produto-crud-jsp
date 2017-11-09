@@ -24,8 +24,10 @@ import br.com.psystems.crud.model.Vendor;
  */
 public class VendorDAO extends AbstractDAO<Vendor> {
 
-	public VendorDAO(ConnectionManager transactionManager) {
-		super(transactionManager);
+
+	public VendorDAO() throws DAOException {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	private static final String SQL_INSERT = "INSERT INTO tb_vendor (name, description) VALUES (?,?)";

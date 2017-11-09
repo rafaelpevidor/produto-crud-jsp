@@ -29,7 +29,7 @@ import br.com.psystems.crud.controller.command.UpdateVendorCommand;
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.infra.ConnectionFactory;
 import br.com.psystems.crud.infra.ConnectionManager;
-import br.com.psystems.crud.infra.ConnectionFactory.SchemaEnum;
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 import br.com.psystems.crud.model.dao.ProductDAO;
 import br.com.psystems.crud.model.dao.VendorDAO;
 import br.com.psystems.crud.util.ConstantsUtils;
@@ -51,24 +51,24 @@ public class AppServlet extends HttpServlet {
     private Map<String, BaseCommand> getActions() throws DAOException {
     	Map<String, BaseCommand> actions = new HashMap<String, BaseCommand>();
 
-		actions.put(ConstantsUtils.CREATE_FORNECEDOR, new AddVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new VendorBind()));
-		actions.put(ConstantsUtils.RECOVER_FORNECEDOR, new FindVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.UPDATE_FORNECEDOR, new UpdateVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new VendorBind()));
-		actions.put(ConstantsUtils.DELETE_FORNECEDOR, new DeleteVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.SEARCH_FORNECEDOR, new SearchVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.LIST_FORNECEDOR, new ListVendorCommand(new VendorDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
-		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
-		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
-		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD))), new ProductBind()));
-		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
-		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO(new ConnectionManager(ConnectionFactory.getConnection(SchemaEnum.PROD)))));
+		actions.put(ConstantsUtils.CREATE_FORNECEDOR, new AddVendorCommand(new VendorDAO(), new VendorBind()));
+		actions.put(ConstantsUtils.RECOVER_FORNECEDOR, new FindVendorCommand(new VendorDAO()));
+		actions.put(ConstantsUtils.UPDATE_FORNECEDOR, new UpdateVendorCommand(new VendorDAO(), new VendorBind()));
+		actions.put(ConstantsUtils.DELETE_FORNECEDOR, new DeleteVendorCommand(new VendorDAO()));
+		actions.put(ConstantsUtils.SEARCH_FORNECEDOR, new SearchVendorCommand(new VendorDAO()));
+		actions.put(ConstantsUtils.LIST_FORNECEDOR, new ListVendorCommand(new VendorDAO()));
+		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(), new ProductBind()));
+		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(), new ProductBind()));
+		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.CREATE_PRODUTO, new AddProductCommand(new ProductDAO(), new ProductBind()));
+		actions.put(ConstantsUtils.RECOVER_PRODUTO, new FindProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.UPDATE_PRODUTO, new UpdateProductCommand(new ProductDAO(), new ProductBind()));
+		actions.put(ConstantsUtils.DELETE_PRODUTO, new DeleteProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.SEARCH_PRODUTO, new SearchProductCommand(new ProductDAO()));
+		actions.put(ConstantsUtils.LIST_PRODUTO, new ListProductCommand(new ProductDAO()));
 	
     	return actions;
     }

@@ -32,7 +32,7 @@ public class ConnectionFactory {
 	 * @return {@link Connection}
 	 * Retorna uma conexão com o banco de dados a partir do esquema passado como argumento
 	 * */
-	public static Connection getConnection(SchemaEnum schema) throws DAOException {
+	public static Connection getConnection(EnviromentEnum schema) throws DAOException {
 
 		Connection conn = null;
 		String mensagem =  "Conexão com o banco de dados obtida com sucesso.";
@@ -64,12 +64,13 @@ public class ConnectionFactory {
 		}
 	}
 
-	public enum SchemaEnum  {
+	public enum EnviromentEnum  {
 		PROD(STR_CON,USER,PASSWORD),
-		HML(STR_CON_HML,USER,PASSWORD)
+		HML(STR_CON_HML,USER,PASSWORD),
+		DEV(STR_CON_HML,USER,PASSWORD)
 		;
 
-		private SchemaEnum(String url, String user, String password) {
+		private EnviromentEnum(String url, String user, String password) {
 			this.url = url;
 			this.user = user;
 			this.password = password;

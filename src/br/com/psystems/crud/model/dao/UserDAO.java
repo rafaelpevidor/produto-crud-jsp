@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
-import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.model.RoleEnum;
 import br.com.psystems.crud.model.User;
@@ -27,17 +26,18 @@ public class UserDAO extends AbstractDAO<User> {
 	
 	public UserDAO() throws DAOException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	private static Logger logger = Logger.getLogger(UserDAO.class);
 	
-	private static final String SQL_INSERT = "INSERT INTO tb_user (name, mail, password, role) VALUES (?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE tb_user SET name = ?, mail = ?, password = ?, role = ? WHERE id = ?";
-	private static final String SQL_DELETE = "DELETE FROM tb_user WHERE id = ?";
-	private static final String SQL_FIND_ALL = "SELECT * FROM tb_user";
-	private static final String SQL_FIND_BY_NOME = "SELECT * FROM tb_user WHERE name like ?";
-	protected static final String SQL_FIND_BY_ID = "SELECT * FROM tb_user WHERE id = ?";
+	public static final String TABLE_NAME = "tb_user";
+	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, mail, password, role) VALUES (?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, mail = ?, password = ?, role = ? WHERE id = ?";
+	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
+	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
+	
 	
 	@Override
 	public void save(User entity) throws DAOException, SystemException {
@@ -75,7 +75,7 @@ public class UserDAO extends AbstractDAO<User> {
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
+				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
 				} else {
 					logger.info("Atualizado com sucesso!\n ".concat(entity.toString()));
@@ -99,7 +99,7 @@ public class UserDAO extends AbstractDAO<User> {
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
+				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro apagado.");
 				} else {
 					logger.info("Usuário apagado com sucesso!");
@@ -111,74 +111,62 @@ public class UserDAO extends AbstractDAO<User> {
 	@Override
 	public User findById(Long id) throws DAOException, SystemException {
 
+		Connection con = null;
 		PreparedStatement ps;
 		
 		try {
-			ps = getPreparedStatement(connectionManager.getConnection(), SQL_FIND_BY_ID);
+			con = connectionManager.getConnection();
+			ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 			
-			ResultSet rs = ps.executeQuery();
+			return getUser(ps.executeQuery());
 			
-			return getUser(rs);
 		} catch (Exception e) {
 			set(e);
 			return null;
 		} finally {
-			connectionManager.closeConnection();
-			logger.info("Conexão com o banbo de dados fechada com sucesso.");
+			connectionManager.close(con);
 		}
 	}
 
 	@Override
 	public List<User> findByName(String name) throws DAOException, SystemException {
 
-		List<User> users = new ArrayList<User>();
-
-		PreparedStatement ps;
+		Connection con = null;
+		
 		try {
-			ps = getPreparedStatement(connectionManager.getConnection(), SQL_FIND_BY_NOME);
-			ps.setString(1, "%"+name);
+			con = connectionManager.getConnection();
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
+			ps.setString(1, "%"+name+"%");
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while (rs.next()) {
-				users.add(getUser(rs));
-			}
+			return getUsers(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
+			return null;
 		} finally {
-			connectionManager.closeConnection();
+			connectionManager.close(con);
 		}
-	
-		return users;
 	}
 
 	@Override
 	public List<User> getAll() throws DAOException, SystemException {
 		
+		Connection con = null;
 		PreparedStatement ps;
+		
 		try {
-			ps = getPreparedStatement(connectionManager.getConnection(), SQL_FIND_ALL);
-			ResultSet rs = ps.executeQuery();
-			return getUsers(rs);
+			con = connectionManager.getConnection();
+			ps = getPreparedStatement(con, SQL_FIND_ALL);
+		
+			return getUsers(ps.executeQuery());
+			
 		} catch (Exception e) {
 			set(e);
+			return null;
 		} finally {
-			connectionManager.closeConnection();
+			connectionManager.close(con);
 		}
-
-		return null;
-	}
-
-	private User getUser(final ResultSet rs) throws SQLException {
-		User user = null;
-		
-		while (rs.next()) {
-			user = createUser(rs);
-		}
-		
-		return user;
 	}
 	
 	private List<User> getUsers(final ResultSet rs) throws SQLException {
@@ -186,9 +174,16 @@ public class UserDAO extends AbstractDAO<User> {
 		List<User> users = new ArrayList<>();
 		
 		while (rs.next()) {
-			users.add(getUser(rs));
+			users.add(createUser(rs));
 		}
 		return users;
+	}
+	
+	private User getUser(final ResultSet rs) throws SQLException {
+		while (rs.next()) {
+			
+		}
+		return createUser(rs);
 	}
 	
 	private User createUser(final ResultSet rs) throws SQLException {
@@ -197,7 +192,7 @@ public class UserDAO extends AbstractDAO<User> {
 		user.setId(rs.getLong("id"));
 		user.setName(rs.getString("name"));
 		user.setEmail(rs.getString("mail"));
-		user.setEmail(rs.getString("password"));
+		user.setPassword(rs.getString("password"));
 		user.setRole(RoleEnum.valueOf(rs.getString("role")));
 	
 		return user;

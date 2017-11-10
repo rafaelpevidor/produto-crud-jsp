@@ -35,7 +35,6 @@ public class ConnectionFactory {
 	public static Connection getConnection(EnviromentEnum schema) throws DAOException {
 
 		Connection conn = null;
-		String mensagem =  "Conexão com o banco de dados obtida com sucesso.";
 
 		try {
 
@@ -44,23 +43,21 @@ public class ConnectionFactory {
 					schema.url, 
 					schema.user, 
 					schema.password
-					);
+			);
 			conn.setAutoCommit(false);
 
-			logger.info(mensagem);
+			logger.info("Conexão com o banco de dados obtida com sucesso.");
 
 			return conn;
 		} catch (ClassNotFoundException e) {
 
-			mensagem = "Driver (JDBC) não encontrado";
-			logger.error(mensagem, e);
-			throw new DAOException(mensagem, e);
+			logger.error("Driver (JDBC) não encontrado", e);
+			throw new DAOException("Driver (JDBC) não encontrado", e);
 
 		} catch (SQLException e) {
 
-			mensagem = "Erro ao obter a conexão";
-			logger.error(mensagem, e);
-			throw new DAOException(mensagem, e);
+			logger.error("Erro ao obter a conexão", e);
+			throw new DAOException("Erro ao obter a conexão", e);
 		}
 	}
 

@@ -18,22 +18,22 @@ public class UserBuilder {
 
 	private User user;
 	
-	public UserBuilder withName(String name) {
+	public UserBuilder setName(String name) {
 		user.setName(name);
 		return this;
 	}
 	
-	public UserBuilder withPassword(String password) {
+	public UserBuilder setPassword(String password) {
 		user.setPassword(password);
 		return this;
 	}
 	
-	public UserBuilder withEmail(String email) {
+	public UserBuilder setEmail(String email) {
 		user.setEmail(email);
 		return this;
 	}
 	
-	public UserBuilder withRole(RoleEnum role) {
+	public UserBuilder setRole(RoleEnum role) {
 		user.setRole(role);
 		return this;
 	}

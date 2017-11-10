@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.TransactionCallback;
-import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.model.Vendor;
 
 /**
@@ -27,15 +26,15 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 
 	public VendorDAO() throws DAOException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	private static final String SQL_INSERT = "INSERT INTO tb_vendor (name, description) VALUES (?,?)";
-	private static final String SQL_UPDATE = "UPDATE tb_vendor SET name = ?, description = ? WHERE id = ?";
-	private static final String SQL_DELETE = "DELETE FROM tb_vendor WHERE id = ?";
-	private static final String SQL_FIND_ALL = "SELECT * FROM tb_vendor";
-	private static final String SQL_FIND_BY_NOME = "SELECT * FROM tb_vendor WHERE name like ?";
-	protected static final String SQL_FIND_BY_ID = "SELECT * FROM tb_vendor WHERE id = ?";
+	public static final String TABLE_NAME = "tb_vendor";
+	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description) VALUES (?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ? WHERE id = ?";
+	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
+	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
 	
 	private static Logger logger = Logger.getLogger(VendorDAO.class);
 	
@@ -49,8 +48,8 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 				
 				PreparedStatement ps = null;
 				ps = getPreparedStatement(connection, SQL_INSERT);
-				ps.setString(0, entity.getName());
-				ps.setString(1, entity.getDescription());
+				ps.setString(1, entity.getName());
+				ps.setString(2, entity.getDescription());
 
 				ps.executeUpdate();
 
@@ -69,13 +68,13 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 				
 				PreparedStatement ps = null;
 				ps = getPreparedStatement(connection, SQL_UPDATE);
-				ps.setString(0, entity.getName());
-				ps.setString(1, entity.getDescription());
-				ps.setLong(2, entity.getId());
+				ps.setString(1, entity.getName());
+				ps.setString(2, entity.getDescription());
+				ps.setLong(3, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
+				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
 				}
 
@@ -83,7 +82,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			}
 		});
 		
-		return entity;
+		return findById(entity.getId());
 	}
 
 	@Override
@@ -96,11 +95,11 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 				
 				PreparedStatement ps = null;
 				ps = getPreparedStatement(connection, SQL_DELETE);
-				ps.setLong(0, id);
+				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
+				if (0 >= qtdLinhas) {
 					throw new DAOException("Nenhum registro apagado.");
 				}
 
@@ -112,89 +111,82 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 	@Override
 	public Vendor findById(Long id) throws DAOException, SystemException {
 
-		connectionManager.doInTransaction(new TransactionCallback() {
+		Connection con = null;
+		
+		try {
+			con = connectionManager.getConnection();
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
+			ps.setLong(1, id);
+
+			return getVendor(ps.executeQuery());
 			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				ResultSet rs = null;
-				Vendor fornecedor = null;
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
 
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_FIND_BY_ID);
-				ps.setLong(0, id);
-
-				rs = ps.executeQuery();
-
-				fornecedor = getFornecedor(rs);
-
-				logger.info("Fornecedor recuperado com sucesso!\n ".concat(fornecedor.toString()));
-			}
-		});
-
-		return null;
 	}
 
 	@Override
 	public List<Vendor> findByName(String nome) throws DAOException, SystemException {
 
-		connectionManager.doInTransaction(new TransactionCallback() {
+		Connection con = null;
+		
+		try {
+			con = connectionManager.getConnection();
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
+			ps.setString(1, "%" + nome + "%");
 			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				List<Vendor> fornecedores = new ArrayList<Vendor>();
-				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_FIND_BY_NOME);
-				ps.setString(0, "%"+nome);
-				
-				ResultSet rs = null;
-				rs = ps.executeQuery();
-
-				while (rs.next()) {
-					fornecedores.add(getFornecedor(rs));
-				}
-
-			}
-		});
-
-		return null;
+			return getVendors(ps.executeQuery());
+			
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
 	}
 
 	@Override
 	public List<Vendor> getAll() throws DAOException, SystemException {
 		
-		connectionManager.doInTransaction(new TransactionCallback() {
+		Connection con = null;
+		
+		try {
+			con = connectionManager.getConnection();
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				List<Vendor> fornecedores = new ArrayList<Vendor>();
-				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_FIND_ALL);
-				
-				ResultSet rs = null;
-				rs = ps.executeQuery();
-
-				while (rs.next()) {
-					fornecedores.add(getFornecedor(rs));
-				}
-
-			}
-		});
-
-		return null;
+			return getVendors(ps.executeQuery());
+			
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
+	}
+	
+	private List<Vendor> getVendors(ResultSet rs) throws SQLException {
+		List<Vendor> vendors = new ArrayList<>();
+		
+		while (rs.next())
+			vendors.add(createVendor(rs));
+		
+		return vendors;
 	}
 
-	private Vendor getFornecedor(ResultSet rs) throws SQLException {
+	private Vendor getVendor(ResultSet rs) throws SQLException {
+		rs.next();
+		return createVendor(rs);
+	}
 
+	private Vendor createVendor(ResultSet rs) throws SQLException {
 		Vendor fornecedor = new Vendor();
 		fornecedor.setId(rs.getLong("id"));
 		fornecedor.setName(rs.getString("name"));
 		fornecedor.setDescription(rs.getString("description"));
-
 		return fornecedor;
 	}
 

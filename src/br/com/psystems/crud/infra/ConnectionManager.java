@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
@@ -24,10 +23,11 @@ public class ConnectionManager {
 	
 	private static Logger logger = Logger.getLogger(ConnectionManager.class);
 	
-	private Connection connection;
-	
 	public void doInTransaction(TransactionCallback callback) throws DAOException, SystemException {
+		Connection connection = null;
+		
 		try {
+			connection = getConnection();
 			callback.execute(connection);
 			connection.commit();
 		} catch (Exception e) {
@@ -38,15 +38,12 @@ public class ConnectionManager {
 				throw new DAOException(e1);
 			}
 		} finally {
-			closeConnection();
+			close(connection);
 		}
 	}
 	
 	public Connection getConnection() throws DAOException {
-		if (null == connection) {
-			connection = ConnectionFactory.getConnection(getEnviroment());
-		}
-		return connection;
+		return ConnectionFactory.getConnection(getEnviroment());
 	}
 	
 	private EnviromentEnum getEnviroment() {
@@ -55,13 +52,12 @@ public class ConnectionManager {
 			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));
 			return EnviromentEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Arquivo de configuração não encontrado.");
 		}
 		return null;
 	}
 
-	public void closeConnection() throws DAOException {
+	public void close(Connection connection) throws DAOException {
 
 		try {
 			if (null != connection) {
@@ -75,25 +71,4 @@ public class ConnectionManager {
 	
 	}
 	
-	protected class ManagedConnection {
-		 
-		private Connection connection;
-		private boolean inUse;
-		
-		public Connection getConnection() {
-			return connection;
-		}
-		
-		public void setConnection(Connection connection) {
-			this.connection = connection;
-		}
-		
-		public boolean isInUse() {
-			return inUse;
-		}
-		
-		public void setInUse(boolean inUse) {
-			this.inUse = inUse;
-		}
-	}
 }

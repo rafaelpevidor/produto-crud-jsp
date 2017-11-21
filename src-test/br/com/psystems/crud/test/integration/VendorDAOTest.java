@@ -24,14 +24,14 @@ import br.com.psystems.crud.test.builder.VendorBuilder;
 public class VendorDAOTest extends AbstractTest {
 	
 	private Vendor vendor;
-	private VendorDAO vendorDAO;
+	private VendorDAO dao;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		vendorDAO = new VendorDAO();
+		dao = new VendorDAO();
 		vendor = new VendorBuilder()
 				.setName("Vendor Name " + ALIAS)
 				.setDescription("Em design gráfico e editoração, Lorem ipsum é um texto utilizado para preencher o espaço de texto em publicações, com a finalidade de verificar o lay-out, tipografia e formatação antes de utilizar conteúdo real. Muitas vezes este texto também é utilizado em catálogos de tipografia para demonstrar textos e títulos escritos com as fontes.")
@@ -44,8 +44,7 @@ public class VendorDAOTest extends AbstractTest {
 	 * @throws java.lang.Exception
 	 */
 	@After
-	public void tearDown() throws Exception {
-	}
+	public void tearDown() throws Exception {}
 
 	/**
 	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#delete(java.lang.Long)}.
@@ -56,21 +55,21 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
 		
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNotNull(vendor);
 		Assert.assertNotNull(vendor.getId());
 		Assert.assertEquals(vendor.getId(), id);
 		
-		vendorDAO.delete(id);
+		dao.delete(id);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNull(vendor);
 	}
@@ -84,12 +83,12 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testSaveVendor() throws DAOException, SystemException, SQLException {
 		
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNotNull(vendor);
 		Assert.assertTrue(vendor.getId().equals(id));
@@ -104,12 +103,12 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testUpdateVendor() throws DAOException, SystemException, SQLException {
 		
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNotNull(vendor);
 		Assert.assertNotNull(vendor.getId());
@@ -117,10 +116,10 @@ public class VendorDAOTest extends AbstractTest {
 		
 		vendor.setName("Fornecedor Premium");
 		
-		vendorDAO.update(vendor);
+		dao.update(vendor);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNotNull(vendor);
 		Assert.assertNotNull(vendor.getId());
@@ -137,12 +136,12 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testFindByIdLong() throws DAOException, SystemException, SQLException {
 		
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
 		vendor = null;
-		vendor = vendorDAO.findById(id);
+		vendor = dao.findById(id);
 		
 		Assert.assertNotNull(vendor);
 		Assert.assertNotNull(vendor.getId());
@@ -159,9 +158,9 @@ public class VendorDAOTest extends AbstractTest {
 		
 		vendor.setName("Rafael Pevidor");
 
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
-		List<Vendor> vendors = vendorDAO.findByName("rafael");
+		List<Vendor> vendors = dao.findByName("rafael");
 		
 		Assert.assertTrue(null != vendors);
 		Assert.assertTrue(!vendors.isEmpty());
@@ -177,9 +176,9 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testGetAll() throws DAOException, SystemException {
 		
-		vendorDAO.save(vendor);
+		dao.save(vendor);
 		
-		List<Vendor> vendors = vendorDAO.getAll();
+		List<Vendor> vendors = dao.getAll();
 		
 		Assert.assertTrue(null != vendors);
 		Assert.assertTrue(!vendors.isEmpty());

@@ -25,7 +25,7 @@ import br.com.psystems.crud.test.builder.UserBuilder;
 public class UserDAOTest extends AbstractTest {
 
 	private User user;
-	private UserDAO userDAO;
+	private UserDAO dao;
 
 	/**
 	 * @throws java.lang.Exception
@@ -33,7 +33,7 @@ public class UserDAOTest extends AbstractTest {
 	@Before
 	public void setUp() throws Exception {
 
-		userDAO = new UserDAO();
+		dao = new UserDAO();
 		user = new UserBuilder()
 				.setEmail("u_"+ALIAS+"@email.com")
 				.setName("User Name " + ALIAS)
@@ -56,20 +56,20 @@ public class UserDAOTest extends AbstractTest {
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
 
-		userDAO.save(user);
+		dao.save(user);
 
 		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		user = null;
-		user = userDAO.findById(id);
+		user = dao.findById(id);
 
 		Assert.assertNotNull(user);
 		Assert.assertNotNull(user.getId());
 		Assert.assertTrue(user.getId().equals(id));
 
-		userDAO.delete(id);
+		dao.delete(id);
 
-		user = userDAO.findById(id);
+		user = dao.findById(id);
 
 		Assert.assertNull(user);
 	}
@@ -83,12 +83,12 @@ public class UserDAOTest extends AbstractTest {
 	@Test
 	public void testSaveUser() throws DAOException, SystemException, SQLException {
 
-		userDAO.save(user);
+		dao.save(user);
 
 		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		user = null;
-		user = userDAO.findById(id);
+		user = dao.findById(id);
 
 		Assert.assertNotNull(user);
 		Assert.assertNotNull(user.getId());
@@ -104,19 +104,19 @@ public class UserDAOTest extends AbstractTest {
 	@Test
 	public void testUpdateUser() throws DAOException, SystemException, SQLException {
 
-		userDAO.save(user);
+		dao.save(user);
 
 		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		user = null;
-		user = userDAO.findById(id);
+		user = dao.findById(id);
 
 		Assert.assertNotNull(user);
 		Assert.assertNotNull(user.getId());
 		Assert.assertTrue(user.getId().equals(id));
 
 		user.setEmail("novoenderecode@ymail.com");
-		user = userDAO.update(user);
+		user = dao.update(user);
 
 		Assert.assertNotNull(user);
 		Assert.assertNotNull(user.getId());
@@ -134,12 +134,12 @@ public class UserDAOTest extends AbstractTest {
 	@Test
 	public void testFindByIdLong() throws DAOException, SystemException, SQLException {
 
-		userDAO.save(user);
+		dao.save(user);
 
 		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		user = null;
-		user = userDAO.findById(id);
+		user = dao.findById(id);
 
 		Assert.assertNotNull(user);
 		Assert.assertNotNull(user.getId());
@@ -156,9 +156,9 @@ public class UserDAOTest extends AbstractTest {
 		
 		user.setName("Rafael Pevidor");
 
-		userDAO.save(user);
+		dao.save(user);
 		
-		List<User> users = userDAO.findByName("rafael");
+		List<User> users = dao.findByName("rafael");
 		
 		Assert.assertTrue(null != users);
 		Assert.assertTrue(!users.isEmpty());
@@ -175,9 +175,9 @@ public class UserDAOTest extends AbstractTest {
 	@Test
 	public void testGetAll() throws DAOException, SystemException, SQLException {
 		
-		userDAO.save(user);
+		dao.save(user);
 		
-		List<User> users = userDAO.getAll();
+		List<User> users = dao.getAll();
 		
 		Assert.assertTrue(null != users);
 		Assert.assertTrue(!users.isEmpty());

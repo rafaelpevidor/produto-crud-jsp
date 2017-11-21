@@ -60,15 +60,13 @@ public class ConnectionManager {
 	public void close(Connection connection) throws DAOException {
 
 		try {
-			if (null != connection) {
+			if (null != connection && !connection.isClosed()) {
 				connection.close();
-				logger.info("Conexão com o banco de dados fechada com sucesso.");
 			}
 		} catch (Exception e) {
 			logger.error("Houve um erro ao fechar a conexão com o banco de dados.",e);
 			throw new DAOException(e);
 		}
-	
 	}
 	
 }

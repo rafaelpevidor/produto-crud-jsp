@@ -23,14 +23,8 @@ public final class ProductBind extends AbstractBind<Product> {
 		Product produto = new Product();
 		try {
 			produto.setDescription(request.getParameter("description"));
-			produto.setLot(request.getParameter("lot"));
 			produto.setName(request.getParameter("name"));
 			produto.setVendorId(NumberUtils.createLong((String) request.getParameter("vendorid")));
-			produto.setAmount(NumberUtils.createBigDecimal((String) request.getParameter("amount")));
-			produto.setPrice(NumberUtils.createBigDecimal((String) request.getParameter("cost")));
-			produto.setCost(NumberUtils.createBigDecimal((String) request.getParameter("price")));
-			produto.setColor(request.getParameter("color"));
-			produto.setReference(NumberUtils.createInteger((String) request.getParameter("reference")));
 			produto.setId(NumberUtils.createLong((String) request.getParameter("id")));
 			
 		} catch (Exception e) {

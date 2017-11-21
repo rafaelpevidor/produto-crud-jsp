@@ -112,11 +112,11 @@ public class UserDAO extends AbstractDAO<User> {
 	public User findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
-		PreparedStatement ps;
 		
 		try {
 			con = connectionManager.getConnection();
-			ps = getPreparedStatement(con, SQL_FIND_BY_ID);
+			
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 			
 			return getUser(ps.executeQuery());
@@ -136,6 +136,7 @@ public class UserDAO extends AbstractDAO<User> {
 		
 		try {
 			con = connectionManager.getConnection();
+			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
 			ps.setString(1, "%"+name+"%");
 			
@@ -153,11 +154,11 @@ public class UserDAO extends AbstractDAO<User> {
 	public List<User> getAll() throws DAOException, SystemException {
 		
 		Connection con = null;
-		PreparedStatement ps;
 		
 		try {
 			con = connectionManager.getConnection();
-			ps = getPreparedStatement(con, SQL_FIND_ALL);
+			
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 		
 			return getUsers(ps.executeQuery());
 			
@@ -180,10 +181,11 @@ public class UserDAO extends AbstractDAO<User> {
 	}
 	
 	private User getUser(final ResultSet rs) throws SQLException {
+		User user = null;
 		while (rs.next()) {
-			
+			user = createUser(rs);
 		}
-		return createUser(rs);
+		return user;
 	}
 	
 	private User createUser(final ResultSet rs) throws SQLException {

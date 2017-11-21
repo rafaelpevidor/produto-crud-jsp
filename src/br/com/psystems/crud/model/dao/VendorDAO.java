@@ -46,8 +46,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_INSERT);
+				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
 				ps.setString(2, entity.getDescription());
 
@@ -66,8 +65,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_UPDATE);
+				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
 				ps.setString(1, entity.getName());
 				ps.setString(2, entity.getDescription());
 				ps.setLong(3, entity.getId());
@@ -93,8 +91,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_DELETE);
+				PreparedStatement ps = getPreparedStatement(connection, SQL_DELETE);
 				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
@@ -115,6 +112,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 		
 		try {
 			con = connectionManager.getConnection();
+			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 
@@ -168,7 +166,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 		}
 	}
 	
-	private List<Vendor> getVendors(ResultSet rs) throws SQLException {
+	private List<Vendor> getVendors(final ResultSet rs) throws SQLException {
 		List<Vendor> vendors = new ArrayList<>();
 		
 		while (rs.next())
@@ -177,12 +175,15 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 		return vendors;
 	}
 
-	private Vendor getVendor(ResultSet rs) throws SQLException {
-		rs.next();
-		return createVendor(rs);
+	private Vendor getVendor(final ResultSet rs) throws SQLException {
+		Vendor vendor = null;
+		while (rs.next()) {
+			vendor = createVendor(rs);
+		}
+		return vendor;
 	}
 
-	private Vendor createVendor(ResultSet rs) throws SQLException {
+	private Vendor createVendor(final ResultSet rs) throws SQLException {
 		Vendor fornecedor = new Vendor();
 		fornecedor.setId(rs.getLong("id"));
 		fornecedor.setName(rs.getString("name"));

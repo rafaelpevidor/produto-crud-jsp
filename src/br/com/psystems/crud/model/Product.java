@@ -4,6 +4,7 @@
 package br.com.psystems.crud.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -22,14 +23,11 @@ public class Product implements BaseEntity {
 	private Long id;
 	private Long vendorId;
 	private String name;
-	private String color;
-	private Integer reference;
-	private String lot;
-	private BigDecimal amount;
-	private BigDecimal price;
-	private BigDecimal cost;
 	private String description;
+	private BigDecimal mininumQuantity;
 	private Vendor vendor;
+	private List<String> tags;
+	private List<Long> references;
 	
 	public Long getId() {
 		return id;
@@ -43,72 +41,24 @@ public class Product implements BaseEntity {
 		return vendorId;
 	}
 	
-	public void setVendorId(Long fornecedorId) {
-		this.vendorId = fornecedorId;
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public void setName(String nome) {
-		this.name = nome;
-	}
-	
-	public String getColor() {
-		return color;
-	}
-	
-	public void setColor(String cor) {
-		this.color = cor;
-	}
-	
-	public Integer getReference() {
-		return reference;
-	}
-	
-	public void setReference(Integer referencia) {
-		this.reference = referencia;
-	}
-	
-	public String getLot() {
-		return lot;
-	}
-	
-	public void setLot(String lote) {
-		this.lot = lote;
-	}
-	
-	public BigDecimal getAmount() {
-		return amount;
-	}
-	
-	public void setAmount(BigDecimal quantidade) {
-		this.amount = quantidade;
-	}
-	
-	public BigDecimal getPrice() {
-		return price;
-	}
-	
-	public void setPrice(BigDecimal valorDeCompra) {
-		this.price = valorDeCompra;
-	}
-	
-	public BigDecimal getCost() {
-		return cost;
-	}
-	
-	public void setCost(BigDecimal valorDeVenda) {
-		this.cost = valorDeVenda;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getDescription() {
 		return description;
 	}
 	
-	public void setDescription(String descricao) {
-		this.description = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public Vendor getVendor() {
@@ -119,21 +69,44 @@ public class Product implements BaseEntity {
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
+		setVendorId(vendor.getId());
+	}
+	
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+
+	public List<Long> getReferences() {
+		return references;
+	}
+
+	public void setReferences(List<Long> references) {
+		this.references = references;
+	}
+	
+	public BigDecimal getMininumQuantity() {
+		return mininumQuantity;
+	}
+
+	public void setMininumQuantity(BigDecimal mininumQuantity) {
+		this.mininumQuantity = mininumQuantity;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((lot == null) ? 0 : lot.hashCode());
+		result = prime * result + ((mininumQuantity == null) ? 0 : mininumQuantity.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((reference == null) ? 0 : reference.hashCode());
-		result = prime * result + ((cost == null) ? 0 : cost.hashCode());
+		result = prime * result + ((references == null) ? 0 : references.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
 		result = prime * result + ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
 	}
@@ -147,16 +120,6 @@ public class Product implements BaseEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
-		if (amount == null) {
-			if (other.amount != null)
-				return false;
-		} else if (!amount.equals(other.amount))
-			return false;
-		if (color == null) {
-			if (other.color != null)
-				return false;
-		} else if (!color.equals(other.color))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -167,30 +130,30 @@ public class Product implements BaseEntity {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (lot == null) {
-			if (other.lot != null)
+		if (mininumQuantity == null) {
+			if (other.mininumQuantity != null)
 				return false;
-		} else if (!lot.equals(other.lot))
+		} else if (!mininumQuantity.equals(other.mininumQuantity))
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (price == null) {
-			if (other.price != null)
+		if (references == null) {
+			if (other.references != null)
 				return false;
-		} else if (!price.equals(other.price))
+		} else if (!references.equals(other.references))
 			return false;
-		if (reference == null) {
-			if (other.reference != null)
+		if (tags == null) {
+			if (other.tags != null)
 				return false;
-		} else if (!reference.equals(other.reference))
+		} else if (!tags.equals(other.tags))
 			return false;
-		if (cost == null) {
-			if (other.cost != null)
+		if (vendor == null) {
+			if (other.vendor != null)
 				return false;
-		} else if (!cost.equals(other.cost))
+		} else if (!vendor.equals(other.vendor))
 			return false;
 		if (vendorId == null) {
 			if (other.vendorId != null)

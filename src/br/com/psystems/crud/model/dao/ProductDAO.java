@@ -3,11 +3,13 @@
  */
 package br.com.psystems.crud.model.dao;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,7 +17,6 @@ import org.apache.log4j.Logger;
 import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.TransactionCallback;
-import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.model.Product;
 
 /**
@@ -23,97 +24,90 @@ import br.com.psystems.crud.model.Product;
  *
  */
 public class ProductDAO extends AbstractDAO<Product> {
-	
-	
 
 	public ProductDAO() throws DAOException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	private static final String SQL_INSERT = "INSERT INTO tb_product (vendor_id, name, color, reference, lot, amount, cost, price, description) VALUES (?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE tb_product SET vendor_id = ?, nmae = ?, color = ?, reference = ?, lot = ?, amount = ?, cost = ?, price = ?, description = ? WHERE id = ?";
-	private static final String SQL_DELETE = "DELETE FROM tb_product WHERE id = ?";
-	private static final String SQL_FIND_ALL = "SELECT * FROM tb_product";
-	private static final String SQL_FIND_BY_NAME = "SELECT * FROM tb_product WHERE name like ?";
-	private static final String SQL_FIND_BY_ID = "SELECT * FROM tb_product WHERE id = ?";
-	protected static final String SQL_FIND_BY_FORNECEDOR = "SELECT * FROM tb_product WHERE vendor_id = ?";
-	
-	private static Logger logger = Logger.getLogger(VendorDAO.class);
-	
-//	private VendorDAO vendorDAO;
-	
+	public static final String TABLE_NAME = "tb_product";
+	protected static final String SQL_FIND_BY_FORNECEDOR = "SELECT * FROM " + TABLE_NAME + " WHERE vendor_id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (vendor_id, name, tags, reference, mininum_quantity, description) VALUES (?,?,?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET vendor_id = ?, name = ?, tags = ?, reference = ?, mininum_quantity = ?, description = ? WHERE id = ?";
+	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
+	private static final String SQL_FIND_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE name like ?";
+	private static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+
+	private static Logger logger = Logger.getLogger(ProductDAO.class);
+
 	@Override
-	public void save(Product entidade) throws DAOException, SystemException {
-		
+	public void save(Product entity) throws DAOException, SystemException {
+
 		connectionManager.doInTransaction(new TransactionCallback() {
-			
+
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
+
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
-				ps.setLong(1, entidade.getVendorId());
-				ps.setString(2, entidade.getName());
-				ps.setString(3, entidade.getDescription());
-				ps.setBigDecimal(4, entidade.getCost());
-				ps.setBigDecimal(5, entidade.getPrice());
-				ps.setBigDecimal(6, entidade.getAmount());
-				ps.setString(7, entidade.getLot());
-				
+				ps.setLong(1, entity.getVendorId());
+				ps.setString(2, entity.getName());
+				ps.setArray(3, getTagsAsSQLArray(entity, connection));
+				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
+				ps.setBigDecimal(5, entity.getMininumQuantity());
+				ps.setString(6, entity.getDescription());
+
 				ps.executeUpdate();
-				
-				logger.info("Produto inserido com sucesso!\n ".concat(entidade.toString()));
+
+				logger.info("Produto inserido com sucesso!\n ".concat(entity.toString()));
 			}
+
 		});
 	}
-
+	
 	@Override
-	public Product update(Product entidade) throws DAOException, SystemException {
-		
+	public Product update(Product entity) throws DAOException, SystemException {
+
 		connectionManager.doInTransaction(new TransactionCallback() {
-			
+
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_UPDATE);
-				ps.setLong(1, entidade.getVendorId());
-				ps.setString(2, entidade.getName());
-				ps.setString(3, entidade.getDescription());
-				ps.setBigDecimal(4, entidade.getCost());
-				ps.setBigDecimal(5, entidade.getPrice());
-				ps.setBigDecimal(6, entidade.getAmount());
-				ps.setString(7, entidade.getLot());
-				ps.setLong(8, entidade.getId());
+
+				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
+				ps.setLong(1, entity.getVendorId());
+				ps.setString(2, entity.getName());
+				ps.setArray(3, getTagsAsSQLArray(entity, connection));
+				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
+				ps.setBigDecimal(5, entity.getMininumQuantity());
+				ps.setString(6, entity.getDescription());
+				ps.setLong(7, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
+				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
 				} else {
-					logger.info("Produto atualizado com sucesso!\n ".concat(entidade.toString()));
+					logger.info("Produto atualizado com sucesso!\n ".concat(entity.toString()));
 				}
 			}
 		});
-		return findById(entidade.getId());
+		return findById(entity.getId());
 	}
 
 	@Override
 	public void delete(Long id) throws DAOException, SystemException {
-		
+
 		connectionManager.doInTransaction(new TransactionCallback() {
-			
+
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-			
-				PreparedStatement ps = null;
-				ps = getPreparedStatement(connection, SQL_DELETE);
-				ps.setLong(0, id);
+
+				PreparedStatement ps = getPreparedStatement(connection, SQL_DELETE);
+				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
 
-				if (0 <= qtdLinhas) {
-					throw new DAOException("Nenhum registro apagado.");
+				if (0 >= qtdLinhas) {
+					logger.info("Nenhum registro apagado.");
 				} else {
 					logger.info("Fornecedor apagado com sucesso!");
 				}
@@ -124,107 +118,119 @@ public class ProductDAO extends AbstractDAO<Product> {
 
 	@Override
 	public Product findById(Long id) throws DAOException, SystemException {
-		
-		connectionManager.doInTransaction(new TransactionCallback() {
+
+		Connection con = null;
+
+		try {
+			con = connectionManager.getConnection();
 			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-				Product produto = null;
-				
-				ps = getPreparedStatement(connection, SQL_FIND_BY_ID);
-				ps.setLong(0, id);
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
+			ps.setLong(1, id);
 
-				rs = ps.executeQuery();
+			logger.info("Produto recuperado com sucesso!");
 
-				produto = getProduto(rs);
-
-				logger.info("Produto recuperado com sucesso!\n ".concat(produto.toString()));
-			}
-		});
-		
-		return null;
+			return getProduct(ps.executeQuery());
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
 	}
 
 	@Override
 	public List<Product> findByName(String name) throws DAOException, SystemException {
 
-		connectionManager.doInTransaction(new TransactionCallback() {
-			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				List<Product> produtos = new ArrayList<Product>();
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-				ps = getPreparedStatement(connection, SQL_FIND_BY_NAME);
-				ps.setString(1, "%"+name);
-				
-				rs = ps.executeQuery();
-
-				while (rs.next()) {
-					produtos.add(getProduto(rs));
-				}
-			}
-		});
+		Connection con = null;
 		
-		return null;
+		try {
+			con = connectionManager.getConnection();
+
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NAME);
+			ps.setString(1, "%"+name+"%");
+			
+			return getProducts(ps.executeQuery());
+			
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
+	
 	}
 
 	@Override
 	public List<Product> getAll() throws DAOException, SystemException {
 
-		connectionManager.doInTransaction(new TransactionCallback() {
-			
-			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
-				List<Product> produtos = new ArrayList<Product>();
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-				ps = getPreparedStatement(connection, SQL_FIND_ALL);
-				rs = ps.executeQuery();
-
-				while (rs.next()) {
-					produtos.add(getProduto(rs));
-				}
-			}
-		});
+		Connection con = null;
 		
-		return null;
+		try {
+			con = connectionManager.getConnection();
+			
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
+			
+			return getProducts(ps.executeQuery());
+			
+		} catch (Exception e) {
+			set(e);
+			return null;
+		} finally {
+			connectionManager.close(con);
+		}
 	}
 
-	private Product getProduto(ResultSet rs) throws SQLException, DAOException {
-		
-		Product produto = new Product();
-		produto.setDescription(rs.getString("description"));
-		produto.setVendorId(rs.getLong("vendor_id"));
-		produto.setId(rs.getLong("id"));
-		produto.setLot(rs.getString("lot"));
-		produto.setName(rs.getString("name"));
-		produto.setAmount(rs.getBigDecimal("amount"));
-		produto.setPrice(rs.getBigDecimal("price"));
-		produto.setCost(rs.getBigDecimal("cost"));
-		
-		return produto;
+	private Product getProduct(final ResultSet rs) throws SQLException, DAOException {
+
+		Product product = null;
+
+		while (rs.next()) {
+			product = createProduct(rs);
+		}
+
+		return product;
 	}
 	
-//    protected Product getProductWithVendor(ResultSet rs) throws SQLException, DAOException {
-//		
-//		Product produto = new Product();
-//		produto.setDescription(rs.getString("description"));
-//		produto.setVendorId(rs.getLong("vendor_id"));
-//		if (null != vendorDAO)
-//			produto.setVendor(vendorDAO.findById(produto.getVendorId()));
-//		produto.setId(rs.getLong("id"));
-//		produto.setLot(rs.getString("lot"));
-//		produto.setName(rs.getString("name"));
-//		produto.setAmount(rs.getDouble("amount"));
-//		produto.setPrice(rs.getDouble("price"));
-//		produto.setCost(rs.getDouble("cost"));
-//		
-//		return produto;
-//	}
+	private List<Product> getProducts(final ResultSet rs) throws SQLException {
+		List<Product> products = new ArrayList<>();
+		
+		while (rs.next()) {
+			products.add(createProduct(rs));
+		}
+		
+		return products;
+	}
+
+	private Product createProduct(final ResultSet rs) throws SQLException {
+		
+		Product product = new Product();
+		product.setDescription(rs.getString("description"));
+		product.setVendorId(rs.getLong("vendor_id"));
+		product.setId(rs.getLong("id"));
+		product.setName(rs.getString("name"));
+		product.setMininumQuantity(rs.getBigDecimal("mininum_quantity"));
+		product.setTags(getTags(rs));
+		product.setReferences(getReferences(rs));
+		
+		return product;
+	}
+	
+	private List<String> getTags(final ResultSet rs) throws SQLException {
+		String[] tagsStrArray = (String[]) rs.getArray("tags").getArray();
+		return Arrays.asList(tagsStrArray);
+	}
+	
+	private List<Long> getReferences(final ResultSet rs) throws SQLException {
+		Long[] referencesLongArray = (Long[]) rs.getArray("reference").getArray();
+		return Arrays.asList(referencesLongArray);
+	}
+
+	private Array getTagsAsSQLArray(final Product entity, final Connection connection) throws SQLException {
+		return connection.createArrayOf("varchar", entity.getTags().toArray());
+	}
+	
+	private Array getReferencesAsSQLArray(final Product entity, final Connection connection) throws SQLException {
+		return connection.createArrayOf("bigint", entity.getReferences().toArray());
+	}
+
 }

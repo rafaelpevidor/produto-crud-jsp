@@ -21,7 +21,7 @@ import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
  */
 public abstract class AbstractTest {
 	
-	private static Logger logger = Logger.getLogger(UserDAOTest.class);
+	private static Logger logger = Logger.getLogger(AbstractTest.class);
 	protected static final long ALIAS = Calendar.getInstance().getTimeInMillis();
 
 	public void truncate(String tableName, boolean cascade) throws SQLException, DAOException {

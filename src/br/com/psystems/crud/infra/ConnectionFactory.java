@@ -46,8 +46,6 @@ public class ConnectionFactory {
 			);
 			conn.setAutoCommit(false);
 
-			logger.info("Conexão com o banco de dados obtida com sucesso.");
-
 			return conn;
 		} catch (ClassNotFoundException e) {
 

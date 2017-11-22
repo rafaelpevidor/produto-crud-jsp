@@ -11,8 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.exception.SystemException;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Vendor;
 import br.com.psystems.crud.model.dao.VendorDAO;
 import br.com.psystems.crud.test.builder.VendorBuilder;
@@ -23,7 +23,7 @@ import br.com.psystems.crud.test.builder.VendorBuilder;
  */
 public class VendorDAOTest extends AbstractTest {
 	
-	private Vendor vendor;
+	private Vendor entity;
 	private VendorDAO dao;
 
 	/**
@@ -32,7 +32,7 @@ public class VendorDAOTest extends AbstractTest {
 	@Before
 	public void setUp() throws Exception {
 		dao = new VendorDAO();
-		vendor = new VendorBuilder()
+		entity = new VendorBuilder()
 				.setName("Vendor Name " + ALIAS)
 				.setDescription("Em design gráfico e editoração, Lorem ipsum é um texto utilizado para preencher o espaço de texto em publicações, com a finalidade de verificar o lay-out, tipografia e formatação antes de utilizar conteúdo real. Muitas vezes este texto também é utilizado em catálogos de tipografia para demonstrar textos e títulos escritos com as fontes.")
 				.build();
@@ -55,23 +55,23 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
 		
-		dao.save(vendor);
+		dao.save(entity);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
-		vendor = null;
-		vendor = dao.findById(id);
+		entity = null;
+		entity = dao.findById(id);
 		
-		Assert.assertNotNull(vendor);
-		Assert.assertNotNull(vendor.getId());
-		Assert.assertEquals(vendor.getId(), id);
+		Assert.assertNotNull(entity);
+		Assert.assertNotNull(entity.getId());
+		Assert.assertEquals(entity.getId(), id);
 		
 		dao.delete(id);
 		
-		vendor = null;
-		vendor = dao.findById(id);
+		entity = null;
+		entity = dao.findById(id);
 		
-		Assert.assertNull(vendor);
+		Assert.assertNull(entity);
 	}
 
 	/**
@@ -83,15 +83,15 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testSaveVendor() throws DAOException, SystemException, SQLException {
 		
-		dao.save(vendor);
+		dao.save(entity);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
-		vendor = null;
-		vendor = dao.findById(id);
+		entity = null;
+		entity = dao.findById(id);
 		
-		Assert.assertNotNull(vendor);
-		Assert.assertTrue(vendor.getId().equals(id));
+		Assert.assertNotNull(entity);
+		Assert.assertTrue(entity.getId().equals(id));
 	}
 
 	/**
@@ -103,28 +103,24 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testUpdateVendor() throws DAOException, SystemException, SQLException {
 		
-		dao.save(vendor);
+		dao.save(entity);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
-		vendor = null;
-		vendor = dao.findById(id);
+		entity = null;
+		entity = dao.findById(id);
 		
-		Assert.assertNotNull(vendor);
-		Assert.assertNotNull(vendor.getId());
-		Assert.assertTrue(vendor.getId().equals(id));
+		Assert.assertNotNull(entity);
+		Assert.assertNotNull(entity.getId());
+		Assert.assertTrue(entity.getId().equals(id));
 		
-		vendor.setName("Fornecedor Premium");
+		entity.setName("Fornecedor Premium");
+		entity = dao.update(entity);
 		
-		dao.update(vendor);
-		
-		vendor = null;
-		vendor = dao.findById(id);
-		
-		Assert.assertNotNull(vendor);
-		Assert.assertNotNull(vendor.getId());
-		Assert.assertTrue(vendor.getId().equals(id));
-		Assert.assertEquals(vendor.getName(), "Fornecedor Premium");
+		Assert.assertNotNull(entity);
+		Assert.assertNotNull(entity.getId());
+		Assert.assertTrue(entity.getId().equals(id));
+		Assert.assertEquals(entity.getName(), "Fornecedor Premium");
 	}
 
 	/**
@@ -136,16 +132,16 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testFindByIdLong() throws DAOException, SystemException, SQLException {
 		
-		dao.save(vendor);
+		dao.save(entity);
 		
 		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
 		
-		vendor = null;
-		vendor = dao.findById(id);
+		entity = null;
+		entity = dao.findById(id);
 		
-		Assert.assertNotNull(vendor);
-		Assert.assertNotNull(vendor.getId());
-		Assert.assertTrue(vendor.getId().equals(id));
+		Assert.assertNotNull(entity);
+		Assert.assertNotNull(entity.getId());
+		Assert.assertTrue(entity.getId().equals(id));
 	}
 
 	/**
@@ -156,9 +152,9 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testFindByNameString() throws DAOException, SystemException {
 		
-		vendor.setName("Rafael Pevidor");
+		entity.setName("Rafael Pevidor");
 
-		dao.save(vendor);
+		dao.save(entity);
 		
 		List<Vendor> vendors = dao.findByName("rafael");
 		
@@ -176,7 +172,7 @@ public class VendorDAOTest extends AbstractTest {
 	@Test
 	public void testGetAll() throws DAOException, SystemException {
 		
-		dao.save(vendor);
+		dao.save(entity);
 		
 		List<Vendor> vendors = dao.getAll();
 		

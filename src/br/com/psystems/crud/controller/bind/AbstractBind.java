@@ -5,7 +5,7 @@ package br.com.psystems.crud.controller.bind;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.psystems.crud.exception.BindException;
+import br.com.psystems.crud.infra.exception.BindException;
 import br.com.psystems.crud.model.BaseEntity;
 
 /**

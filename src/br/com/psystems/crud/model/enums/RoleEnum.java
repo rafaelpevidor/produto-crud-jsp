@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.psystems.crud.model;
+package br.com.psystems.crud.model.enums;
 
 /**
  * @author developer

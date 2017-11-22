@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.infra.exception.DAOException;
 
 /**
  * @author rafael.saldanha

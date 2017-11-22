@@ -15,31 +15,31 @@ import org.apache.log4j.Logger;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
-import br.com.psystems.crud.model.Vendor;
+import br.com.psystems.crud.model.UnitOfMeasurement;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class VendorDAO extends AbstractDAO<Vendor> {
+public class UnitOfMeasurementDAO extends AbstractDAO<UnitOfMeasurement> {
 
 
-	public VendorDAO() throws DAOException {
+	public UnitOfMeasurementDAO() throws DAOException {
 		super();
 	}
 
-	public static final String TABLE_NAME = "tb_vendor";
+	public static final String TABLE_NAME = "tb_unit_measurement";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description) VALUES (?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name) VALUES (?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
 	
-	private static Logger logger = Logger.getLogger(VendorDAO.class);
+	private static Logger logger = Logger.getLogger(UnitOfMeasurementDAO.class);
 	
 	@Override
-	public void save(Vendor entity) throws DAOException, SystemException {
+	public void save(UnitOfMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
@@ -48,7 +48,6 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
 
 				ps.executeUpdate();
 
@@ -58,7 +57,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 	}
 
 	@Override
-	public Vendor update(Vendor entity) throws DAOException, SystemException {
+	public UnitOfMeasurement update(UnitOfMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
@@ -67,8 +66,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
-				ps.setLong(3, entity.getId());
+				ps.setLong(2, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
@@ -106,7 +104,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 	}
 
 	@Override
-	public Vendor findById(Long id) throws DAOException, SystemException {
+	public UnitOfMeasurement findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -116,7 +114,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 
-			return getVendor(ps.executeQuery());
+			return getUnitOfMeasurement(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -128,7 +126,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 	}
 
 	@Override
-	public List<Vendor> findByName(String nome) throws DAOException, SystemException {
+	public List<UnitOfMeasurement> findByName(String nome) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -137,7 +135,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
 			ps.setString(1, "%" + nome + "%");
 			
-			return getVendors(ps.executeQuery());
+			return getUnitsOfMeasurement(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -148,7 +146,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 	}
 
 	@Override
-	public List<Vendor> getAll() throws DAOException, SystemException {
+	public List<UnitOfMeasurement> getAll() throws DAOException, SystemException {
 		
 		Connection con = null;
 		
@@ -156,7 +154,7 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 			con = connectionManager.getConnection();
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 			
-			return getVendors(ps.executeQuery());
+			return getUnitsOfMeasurement(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -166,29 +164,28 @@ public class VendorDAO extends AbstractDAO<Vendor> {
 		}
 	}
 	
-	private List<Vendor> getVendors(final ResultSet rs) throws SQLException {
-		List<Vendor> vendors = new ArrayList<>();
+	private List<UnitOfMeasurement> getUnitsOfMeasurement(final ResultSet rs) throws SQLException {
+		List<UnitOfMeasurement> units = new ArrayList<>();
 		
 		while (rs.next())
-			vendors.add(createVendor(rs));
+			units.add(createUnitOfMeasurement(rs));
 		
-		return vendors;
+		return units;
 	}
 
-	private Vendor getVendor(final ResultSet rs) throws SQLException {
-		Vendor vendor = null;
+	private UnitOfMeasurement getUnitOfMeasurement(final ResultSet rs) throws SQLException {
+		UnitOfMeasurement unit = null;
 		while (rs.next()) {
-			vendor = createVendor(rs);
+			unit = createUnitOfMeasurement(rs);
 		}
-		return vendor;
+		return unit;
 	}
 
-	private Vendor createVendor(final ResultSet rs) throws SQLException {
-		Vendor fornecedor = new Vendor();
-		fornecedor.setId(rs.getLong("id"));
-		fornecedor.setName(rs.getString("name"));
-		fornecedor.setDescription(rs.getString("description"));
-		return fornecedor;
+	private UnitOfMeasurement createUnitOfMeasurement(final ResultSet rs) throws SQLException {
+		UnitOfMeasurement unit = new UnitOfMeasurement();
+		unit.setId(rs.getLong("id"));
+		unit.setName(rs.getString("name"));
+		return unit;
 	}
 
 }

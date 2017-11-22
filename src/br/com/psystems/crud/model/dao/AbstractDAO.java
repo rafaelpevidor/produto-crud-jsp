@@ -5,9 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.BaseEntity;
 
 abstract class AbstractDAO <T extends BaseEntity> {

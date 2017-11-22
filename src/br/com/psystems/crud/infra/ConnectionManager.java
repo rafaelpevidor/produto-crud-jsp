@@ -11,9 +11,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.exception.SystemException;
 
 /**
  * @author developer

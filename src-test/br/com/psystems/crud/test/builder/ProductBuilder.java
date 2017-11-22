@@ -3,6 +3,7 @@
  */
 package br.com.psystems.crud.test.builder;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.psystems.crud.model.Product;
@@ -36,6 +37,11 @@ public class ProductBuilder {
 	
 	public ProductBuilder setReferences(List<Long> references) {
 		product.setReferences(references);
+		return this;
+	}
+	
+	public ProductBuilder setMininumQuantity(BigDecimal mininumQuantity) {
+		product.setMininumQuantity(mininumQuantity);
 		return this;
 	}
 	

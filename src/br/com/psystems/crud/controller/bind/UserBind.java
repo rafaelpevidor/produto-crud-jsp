@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import br.com.psystems.crud.exception.BindException;
-import br.com.psystems.crud.model.RoleEnum;
+import br.com.psystems.crud.infra.exception.BindException;
+import br.com.psystems.crud.infra.util.ConstantsUtils;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.util.ConstantsUtils;
+import br.com.psystems.crud.model.enums.RoleEnum;
 
 /**
  * @author rafael.saldanha

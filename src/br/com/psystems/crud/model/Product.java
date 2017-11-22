@@ -22,10 +22,12 @@ public class Product implements BaseEntity {
 
 	private Long id;
 	private Long vendorId;
+	private Long unitMeasurementId;
 	private String name;
 	private String description;
 	private BigDecimal mininumQuantity;
 	private Vendor vendor;
+	private UnitOfMeasurement unitMeasurement;
 	private List<String> tags;
 	private List<Long> references;
 	
@@ -69,7 +71,7 @@ public class Product implements BaseEntity {
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
-		setVendorId(vendor.getId());
+		setVendorId(null != vendor && null != vendor.getId()?vendor.getId():null);
 	}
 	
 	public List<String> getTags() {
@@ -96,6 +98,24 @@ public class Product implements BaseEntity {
 		this.mininumQuantity = mininumQuantity;
 	}
 
+	public Long getUnitMeasurementId() {
+		return unitMeasurementId;
+	}
+
+	public void setUnitMeasurementId(Long unitMeasurementId) {
+		this.unitMeasurementId = unitMeasurementId;
+	}
+
+	public UnitOfMeasurement getUnitMeasurement() {
+		return unitMeasurement;
+	}
+
+	public void setUnitMeasurement(UnitOfMeasurement unitMeasurement) {
+		this.unitMeasurement = unitMeasurement;
+		if (null != unitMeasurement && null != unitMeasurement.getId())
+			setUnitMeasurementId(unitMeasurement.getId());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -108,6 +128,8 @@ public class Product implements BaseEntity {
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
 		result = prime * result + ((vendorId == null) ? 0 : vendorId.hashCode());
+		result = prime * result + ((unitMeasurement == null) ? 0 : unitMeasurement.hashCode());
+		result = prime * result + ((unitMeasurementId == null) ? 0 : unitMeasurementId.hashCode());
 		return result;
 	}
 
@@ -159,6 +181,16 @@ public class Product implements BaseEntity {
 			if (other.vendorId != null)
 				return false;
 		} else if (!vendorId.equals(other.vendorId))
+			return false;
+		if (unitMeasurement == null) {
+			if (other.unitMeasurement != null)
+				return false;
+		} else if (!unitMeasurement.equals(other.unitMeasurement))
+			return false;
+		if (unitMeasurementId == null) {
+			if (other.unitMeasurementId != null)
+				return false;
+		} else if (!unitMeasurementId.equals(other.unitMeasurementId))
 			return false;
 		return true;
 	}

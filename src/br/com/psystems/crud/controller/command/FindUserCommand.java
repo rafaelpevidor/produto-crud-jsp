@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.exception.SystemException;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Vendor;
 import br.com.psystems.crud.model.dao.VendorDAO;
 

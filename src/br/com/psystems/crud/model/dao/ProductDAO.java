@@ -14,9 +14,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import br.com.psystems.crud.exception.DAOException;
-import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.TransactionCallback;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
 
 /**
@@ -109,7 +109,7 @@ public class ProductDAO extends AbstractDAO<Product> {
 				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro apagado.");
 				} else {
-					logger.info("Fornecedor apagado com sucesso!");
+					logger.info("Produto apagado com sucesso!");
 				}
 
 			}
@@ -126,8 +126,6 @@ public class ProductDAO extends AbstractDAO<Product> {
 			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
-
-			logger.info("Produto recuperado com sucesso!");
 
 			return getProduct(ps.executeQuery());
 		} catch (Exception e) {

@@ -3,8 +3,8 @@
  */
 package br.com.psystems.crud.test.builder;
 
-import br.com.psystems.crud.model.RoleEnum;
 import br.com.psystems.crud.model.User;
+import br.com.psystems.crud.model.enums.RoleEnum;
 
 /**
  * @author developer

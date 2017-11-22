@@ -26,13 +26,13 @@ import br.com.psystems.crud.controller.command.SearchProductCommand;
 import br.com.psystems.crud.controller.command.SearchVendorCommand;
 import br.com.psystems.crud.controller.command.UpdateProductCommand;
 import br.com.psystems.crud.controller.command.UpdateVendorCommand;
-import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.infra.ConnectionFactory;
 import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.infra.util.ConstantsUtils;
 import br.com.psystems.crud.model.dao.ProductDAO;
 import br.com.psystems.crud.model.dao.VendorDAO;
-import br.com.psystems.crud.util.ConstantsUtils;
 
 /**
  * Servlet implementation class MainServlet

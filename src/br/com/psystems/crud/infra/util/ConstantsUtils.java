@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.psystems.crud.util;
+package br.com.psystems.crud.infra.util;
 
 /**
  * @author rafaelpevidor

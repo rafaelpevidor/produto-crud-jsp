@@ -5,6 +5,8 @@ package br.com.psystems.crud.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import br.com.psystems.crud.model.enums.RoleEnum;
+
 /**
  * @author developer
  *

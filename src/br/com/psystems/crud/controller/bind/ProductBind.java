@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import br.com.psystems.crud.exception.BindException;
+import br.com.psystems.crud.infra.exception.BindException;
+import br.com.psystems.crud.infra.util.ConstantsUtils;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.util.ConstantsUtils;
 
 /**
  * @author rafael.saldanha

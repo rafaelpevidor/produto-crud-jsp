@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.psystems.crud.exception;
+package br.com.psystems.crud.infra.exception;
 
 /**
  * @author developer

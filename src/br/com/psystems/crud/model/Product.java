@@ -27,7 +27,7 @@ public class Product implements BaseEntity {
 	private String description;
 	private BigDecimal mininumQuantity;
 	private Vendor vendor;
-	private UnitOfMeasurement unitMeasurement;
+	private UnitMeasurement unitMeasurement;
 	private List<String> tags;
 	private List<Long> references;
 	
@@ -106,11 +106,11 @@ public class Product implements BaseEntity {
 		this.unitMeasurementId = unitMeasurementId;
 	}
 
-	public UnitOfMeasurement getUnitMeasurement() {
+	public UnitMeasurement getUnitMeasurement() {
 		return unitMeasurement;
 	}
 
-	public void setUnitMeasurement(UnitOfMeasurement unitMeasurement) {
+	public void setUnitMeasurement(UnitMeasurement unitMeasurement) {
 		this.unitMeasurement = unitMeasurement;
 		if (null != unitMeasurement && null != unitMeasurement.getId())
 			setUnitMeasurementId(unitMeasurement.getId());

@@ -14,7 +14,7 @@ import org.junit.Test;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.UserDAO;
+import br.com.psystems.crud.model.dao.impl.UserDAO;
 import br.com.psystems.crud.model.enums.RoleEnum;
 import br.com.psystems.crud.test.builder.UserBuilder;
 
@@ -51,7 +51,7 @@ public class UserDAOTest extends AbstractTest {
 	public void tearDown() throws Exception {}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#delete(java.lang.Long)}.
 	 */
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
@@ -75,7 +75,7 @@ public class UserDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#save(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#save(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -96,7 +96,7 @@ public class UserDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#update(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#update(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -126,7 +126,7 @@ public class UserDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -147,7 +147,7 @@ public class UserDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -167,7 +167,7 @@ public class UserDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.UserDAO#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -183,6 +183,22 @@ public class UserDAOTest extends AbstractTest {
 		Assert.assertTrue(!users.isEmpty());
 		Assert.assertTrue(1 == users.size());
 		
+	}
+	
+	@Test
+	public void testSaveUserWithNullValues() throws DAOException, SystemException, SQLException {
+
+		entity.setEmail(null);
+		dao.save(entity);
+
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+
+		entity = null;
+		entity = dao.findById(id);
+
+		Assert.assertNotNull(entity);
+		Assert.assertNotNull(entity.getId());
+		Assert.assertTrue(entity.getId().equals(id));
 	}
 
 }

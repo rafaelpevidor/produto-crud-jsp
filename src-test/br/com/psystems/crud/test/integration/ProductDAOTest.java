@@ -14,8 +14,8 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.ProductDAO;
-import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.model.dao.impl.ProductDAO;
+import br.com.psystems.crud.model.dao.impl.VendorDAO;
 import br.com.psystems.crud.test.builder.ProductBuilder;
 import br.com.psystems.crud.test.builder.VendorBuilder;
 

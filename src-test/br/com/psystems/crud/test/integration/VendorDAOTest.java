@@ -14,7 +14,7 @@ import org.junit.Test;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.model.dao.impl.VendorDAO;
 import br.com.psystems.crud.test.builder.VendorBuilder;
 
 /**
@@ -47,7 +47,7 @@ public class VendorDAOTest extends AbstractTest {
 	public void tearDown() throws Exception {}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#delete(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -75,7 +75,7 @@ public class VendorDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#save(br.com.psystems.crud.model.Vendor)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#save(br.com.psystems.crud.model.Vendor)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -95,7 +95,7 @@ public class VendorDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#update(br.com.psystems.crud.model.Vendor)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#update(br.com.psystems.crud.model.Vendor)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -124,7 +124,7 @@ public class VendorDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -145,7 +145,7 @@ public class VendorDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -165,7 +165,7 @@ public class VendorDAOTest extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.VendorDAO#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */

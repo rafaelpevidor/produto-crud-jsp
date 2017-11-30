@@ -19,14 +19,14 @@ public class User implements BaseEntity {
 	private static final long serialVersionUID = -3413257134395699737L;
 
 	private Long id;
-	
 	private String name;
-	
 	private String email;
-	
 	private String password;
+	private RoleEnum role;
+//	private List<String> roles;
+//	private List<RoleEnum> rolesEnum;
 	
-	private RoleEnum role;	
+	
 	/**
 	 * @see br.com.psystems.crud.model.BaseEntity#getId()
 	 */

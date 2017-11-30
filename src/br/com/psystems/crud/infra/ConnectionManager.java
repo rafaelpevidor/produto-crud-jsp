@@ -49,7 +49,7 @@ public class ConnectionManager {
 	private EnviromentEnum getEnviroment() {
 		Properties propertiesFile = new Properties();
 		try {
-			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));
+			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));//FIXME rever o local do arquivo
 			return EnviromentEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
 		} catch (IOException e) {
 			logger.error("Arquivo de configuração não encontrado.");

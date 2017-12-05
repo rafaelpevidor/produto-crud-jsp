@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
@@ -34,8 +35,11 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 	public ProductDAOImpl() throws DAOException {
 		super();
 	}
+	
+	public ProductDAOImpl(ConnectionManager connectionManager) throws DAOException {
+		super(connectionManager);
+	}
 
-	public static final String TABLE_NAME = "tb_product";
 	protected static final String SQL_FIND_BY_FORNECEDOR = "SELECT * FROM " + TABLE_NAME + " WHERE vendor_id = ?";
 	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (vendor_id, name, mininum_quantity, tags, reference, own_manufacturing, description) VALUES (?,?,?,?,?,?)";
 	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET vendor_id = ?, name = ?, mininum_quantity = ?, tags = ?, reference = ?, own_manufacturing = ?, description = ? WHERE id = ?";

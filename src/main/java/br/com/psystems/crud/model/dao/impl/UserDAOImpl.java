@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
@@ -33,13 +34,16 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 	public UserDAOImpl() throws DAOException {
 		super();
 	}
+	
+	public UserDAOImpl(ConnectionManager connectionManager) throws DAOException {
+		super(connectionManager);
+	}
 
 	private static Logger logger = Logger.getLogger(UserDAOImpl.class);
 	
-	public static final String TABLE_NAME = "tb_user";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, mail, password, role) VALUES (?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, mail = ?, password = ?, role = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, email, password, role) VALUES (?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
@@ -199,7 +203,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 		User user = new User();
 		user.setId(rs.getLong("id"));
 		user.setName(rs.getString("name"));
-		user.setEmail(rs.getString("mail"));
+		user.setEmail(rs.getString("email"));
 		user.setPassword(rs.getString("password"));
 		user.setRole(RoleEnum.valueOf(rs.getString("role")));
 	

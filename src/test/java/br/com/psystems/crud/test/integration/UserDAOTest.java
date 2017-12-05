@@ -11,9 +11,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
+import br.com.psystems.crud.model.dao.UserDAO;
 import br.com.psystems.crud.model.dao.impl.UserDAOImpl;
 import br.com.psystems.crud.model.enums.RoleEnum;
 import br.com.psystems.crud.test.builder.UserBuilder;
@@ -25,30 +28,30 @@ import br.com.psystems.crud.test.builder.UserBuilder;
 public class UserDAOTest extends AbstractTest {
 
 	private User entity;
-	private UserDAOImpl dao;
+	private UserDAO dao;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-
-		dao = new UserDAOImpl();
+		
+		dao = new UserDAOImpl(new ConnectionManager(EnviromentEnum.DEV));
 		entity = new UserBuilder()
 				.setEmail("u_"+ALIAS+"@email.com")
 				.setName("User Name " + ALIAS)
 				.setPassword("password_"+ALIAS)
 				.setRole(RoleEnum.ADMIN)
 				.build();
-		
-		truncate(UserDAOImpl.TABLE_NAME, false);
 	}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@After
-	public void tearDown() throws Exception {}
+	public void tearDown() throws Exception {
+		truncate(UserDAO.TABLE_NAME, false);
+	}
 
 	/**
 	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#delete(java.lang.Long)}.

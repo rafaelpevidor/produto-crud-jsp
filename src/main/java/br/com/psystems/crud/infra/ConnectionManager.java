@@ -3,8 +3,11 @@
  */
 package br.com.psystems.crud.infra;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +29,7 @@ public class ConnectionManager {
 
 	private static Logger logger = Logger.getLogger(ConnectionManager.class);
 	
-	private EnviromentEnum enviroment = EnviromentEnum.PROD;
+	private EnviromentEnum enviroment;
 	
 	public void doInTransaction(TransactionCallback callback) throws DAOException, SystemException {
 		Connection connection = null;
@@ -48,19 +51,21 @@ public class ConnectionManager {
 	}
 	
 	public Connection getConnection() throws DAOException {
+		if (null == enviroment)
+			enviroment = getEnviroment();
 		return ConnectionFactory.getConnection(enviroment);
 	}
 	
-//	private EnviromentEnum getEnviroment() {
-//		Properties propertiesFile = new Properties();
-//		try {
-//			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));//FIXME rever o local do arquivo
-//			return EnviromentEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
-//		} catch (IOException e) {
-//			logger.error("Arquivo de configuração não encontrado.");
-//		}
-//		return null;
-//	}
+	private EnviromentEnum getEnviroment() {
+		Properties propertiesFile = new Properties();
+		try {
+			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));//FIXME rever o local do arquivo
+			return EnviromentEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
+		} catch (IOException e) {
+			logger.error("Arquivo de configuração não encontrado.");
+		}
+		return null;
+	}
 
 	public void close(Connection connection) throws DAOException {
 

@@ -11,4 +11,5 @@ import br.com.psystems.crud.model.Vendor;
  */
 public interface VendorDAO extends BaseDAO<Vendor> {
 
+	public static final String TABLE_NAME = "tb_vendor";
 }

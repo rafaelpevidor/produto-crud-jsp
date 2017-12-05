@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
@@ -32,8 +33,11 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 	public VendorDAOImpl() throws DAOException {
 		super();
 	}
+	
+	public VendorDAOImpl(ConnectionManager connectionManager) throws DAOException {
+		super(connectionManager);
+	}
 
-	public static final String TABLE_NAME = "tb_vendor";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description) VALUES (?,?)";
 	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ? WHERE id = ?";

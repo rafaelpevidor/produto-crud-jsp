@@ -11,4 +11,5 @@ import br.com.psystems.crud.model.User;
  */
 public interface UserDAO extends BaseDAO<User> {
 
+	public static final String TABLE_NAME = "tb_user";
 }

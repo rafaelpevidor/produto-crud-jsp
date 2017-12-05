@@ -11,4 +11,5 @@ import br.com.psystems.crud.model.UnitMeasurement;
  */
 public interface UnitMeasurementDAO extends BaseDAO<UnitMeasurement> {
 
+	public static final String TABLE_NAME = "tb_unit_measurement";
 }

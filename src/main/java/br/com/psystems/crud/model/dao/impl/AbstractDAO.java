@@ -14,6 +14,10 @@ public abstract class AbstractDAO {
 		this.connectionManager = new ConnectionManager();
 	}
 	
+	public AbstractDAO(ConnectionManager connectionManager) throws DAOException {
+		this.connectionManager = connectionManager;
+	}
+	
 	protected ConnectionManager connectionManager;
 	
 	public PreparedStatement getPreparedStatement(Connection connection, String sql) throws SQLException {

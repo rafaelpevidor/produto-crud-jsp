@@ -62,6 +62,7 @@ public class ConnectionFactory {
 	public enum EnviromentEnum  {
 		PROD(STR_CON,USER,PASSWORD),
 		HML(STR_CON_HML,USER,PASSWORD),
+		TEST(STR_CON_HML,USER,PASSWORD),
 		DEV(STR_CON_HML,USER,PASSWORD)
 		;
 

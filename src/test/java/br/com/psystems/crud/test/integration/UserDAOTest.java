@@ -3,11 +3,15 @@
  */
 package br.com.psystems.crud.test.integration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +20,7 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.UserDAO;
-import br.com.psystems.crud.model.dao.impl.UserDAOImpl;
+import br.com.psystems.crud.model.dao.impl.UserDAO;
 import br.com.psystems.crud.model.enums.RoleEnum;
 import br.com.psystems.crud.test.builder.UserBuilder;
 
@@ -25,7 +28,7 @@ import br.com.psystems.crud.test.builder.UserBuilder;
  * @author developer
  *
  */
-public class UserDAOTest extends AbstractTest {
+public class UserDAOTest extends AbstractTest<User> {
 
 	private User entity;
 	private UserDAO dao;
@@ -35,14 +38,8 @@ public class UserDAOTest extends AbstractTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		
-		dao = new UserDAOImpl(new ConnectionManager(EnviromentEnum.DEV));
-		entity = new UserBuilder()
-				.setEmail("u_"+ALIAS+"@email.com")
-				.setName("User Name " + ALIAS)
-				.setPassword("password_"+ALIAS)
-				.setRole(RoleEnum.ADMIN)
-				.build();
+		dao = new UserDAO(new ConnectionManager(EnviromentEnum.TEST));
+		entity = getEntity(); 
 	}
 
 	/**
@@ -50,35 +47,35 @@ public class UserDAOTest extends AbstractTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncate(UserDAO.TABLE_NAME, false);
+		truncate(UserDAO.TABLE_NAME);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#delete(java.lang.Long)}.
 	 */
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
 
 		dao.delete(id);
 
 		entity = dao.findById(id);
 
-		Assert.assertNull(entity);
+		assertNull(entity);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#save(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#save(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -88,18 +85,18 @@ public class UserDAOTest extends AbstractTest {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#update(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#update(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -109,27 +106,27 @@ public class UserDAOTest extends AbstractTest {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
 
 		entity.setEmail("novoenderecode@ymail.com");
 		entity = dao.update(entity);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
-		Assert.assertEquals(entity.getEmail(), "novoenderecode@ymail.com");
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
+		assertEquals(entity.getEmail(), "novoenderecode@ymail.com");
 
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -139,18 +136,18 @@ public class UserDAOTest extends AbstractTest {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -163,14 +160,14 @@ public class UserDAOTest extends AbstractTest {
 		
 		List<User> users = dao.findByName("rafael");
 		
-		Assert.assertTrue(null != users);
-		Assert.assertTrue(!users.isEmpty());
-		Assert.assertTrue(users.size() == 1 && null != users.get(0).getId());
-		Assert.assertTrue(users.get(0).getName().equals("Rafael Pevidor"));
+		assertTrue(null != users);
+		assertTrue(!users.isEmpty());
+		assertTrue(users.size() == 1 && null != users.get(0).getId());
+		assertTrue(users.get(0).getName().equals("Rafael Pevidor"));
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -182,26 +179,45 @@ public class UserDAOTest extends AbstractTest {
 		
 		List<User> users = dao.getAll();
 		
-		Assert.assertTrue(null != users);
-		Assert.assertTrue(!users.isEmpty());
-		Assert.assertTrue(1 == users.size());
+		assertTrue(null != users);
+		assertTrue(!users.isEmpty());
+		assertTrue(1 == users.size());
 		
 	}
 	
-	@Test
+	@Test(expected = DAOException.class)
 	public void testSaveUserWithNullValues() throws DAOException, SystemException, SQLException {
 
 		entity.setEmail(null);
 		dao.save(entity);
+	}
+	
+	@Test(expected = DAOException.class)
+	public void testUpdateUserToNullValues() throws DAOException, SystemException, SQLException {
 
-		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
-
-		entity = null;
+		dao.save(entity);
+		
+		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		
 		entity = dao.findById(id);
+		
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
+		
+		entity.setEmail(null);
+		entity = dao.update(entity);
 
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
+	}
+
+	@Override
+	protected User getEntity() {
+		return new UserBuilder()
+				.setEmail("u_"+ALIAS+"@email.com")
+				.setName("User Name " + ALIAS)
+				.setPassword("password_"+ALIAS)
+				.setRole(RoleEnum.ADMIN)
+				.build();
 	}
 
 }

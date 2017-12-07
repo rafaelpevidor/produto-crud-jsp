@@ -12,7 +12,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.UnitMeasurement;
-import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
+import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO;
 import br.com.psystems.crud.service.UnitMeasurementService;
 
 /**

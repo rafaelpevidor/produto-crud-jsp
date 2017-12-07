@@ -16,39 +16,40 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
-import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.model.UnitMeasurement;
+import br.com.psystems.crud.model.dao.BaseDAO;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
+public class UnitMeasurementDAO extends AbstractDAO<UnitMeasurement> implements BaseDAO {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2816283066309636733L;
+	private static final long serialVersionUID = -5745258755017204398L;
 
-	public VendorDAOImpl() throws DAOException {
+	public UnitMeasurementDAO() throws DAOException {
 		super();
 	}
 	
-	public VendorDAOImpl(ConnectionManager connectionManager) throws DAOException {
+	public UnitMeasurementDAO(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
+	public static final String TABLE_NAME = "tb_unit_measurement";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description) VALUES (?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name) VALUES (?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
 	
-	private static Logger logger = Logger.getLogger(VendorDAOImpl.class);
+	private static Logger logger = Logger.getLogger(UnitMeasurementDAO.class);
 	
 	@Override
-	public void save(Vendor entity) throws DAOException, SystemException {
+	public void save(UnitMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
@@ -57,17 +58,16 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
 
 				ps.executeUpdate();
 
-				logger.info("Fornecedor inserido com sucesso!\n ".concat(entity.toString()));
+				logger.info("Unidade de Medida inserida com sucesso!\n ".concat(entity.toString()));
 			}
 		});
 	}
 
 	@Override
-	public Vendor update(Vendor entity) throws DAOException, SystemException {
+	public UnitMeasurement update(UnitMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
@@ -76,8 +76,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
-				ps.setLong(3, entity.getId());
+				ps.setLong(2, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
@@ -85,7 +84,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 					logger.info("Nenhum registro alterado.");
 				}
 
-				logger.info("Fornecedor atualizado com sucesso!\n ".concat(entity.toString()));
+				logger.info("Unidade de Medida atualizada com sucesso!\n ".concat(entity.toString()));
 			}
 		});
 		
@@ -109,13 +108,13 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 					throw new DAOException("Nenhum registro apagado.");
 				}
 
-				logger.info("Fornecedor apagado com sucesso!");
+				logger.info("Unidade de Medida apagada com sucesso!");
 			}
 		});
 	}
 
 	@Override
-	public Vendor findById(Long id) throws DAOException, SystemException {
+	public UnitMeasurement findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -125,7 +124,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 
-			return getVendor(ps.executeQuery());
+			return getEntity(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -137,7 +136,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 	}
 
 	@Override
-	public List<Vendor> findByName(String nome) throws DAOException, SystemException {
+	public List<UnitMeasurement> findByName(String nome) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -146,7 +145,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
 			ps.setString(1, "%" + nome + "%");
 			
-			return getVendors(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -157,7 +156,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 	}
 
 	@Override
-	public List<Vendor> getAll() throws DAOException, SystemException {
+	public List<UnitMeasurement> getAll() throws DAOException, SystemException {
 		
 		Connection con = null;
 		
@@ -165,7 +164,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 			con = connectionManager.getConnection();
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 			
-			return getVendors(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -175,29 +174,31 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 		}
 	}
 	
-	private List<Vendor> getVendors(final ResultSet rs) throws SQLException {
-		List<Vendor> vendors = new ArrayList<>();
+	@Override
+	protected List<UnitMeasurement> getEntityList(final ResultSet rs) throws SQLException {
+		List<UnitMeasurement> units = new ArrayList<>();
 		
 		while (rs.next())
-			vendors.add(createVendor(rs));
+			units.add(createEntity(rs));
 		
-		return vendors;
+		return units;
 	}
 
-	private Vendor getVendor(final ResultSet rs) throws SQLException {
-		Vendor vendor = null;
+	@Override
+	protected UnitMeasurement getEntity(final ResultSet rs) throws SQLException {
+		UnitMeasurement unit = null;
 		while (rs.next()) {
-			vendor = createVendor(rs);
+			unit = createEntity(rs);
 		}
-		return vendor;
+		return unit;
 	}
 
-	private Vendor createVendor(final ResultSet rs) throws SQLException {
-		Vendor fornecedor = new Vendor();
-		fornecedor.setId(rs.getLong("id"));
-		fornecedor.setName(rs.getString("name"));
-		fornecedor.setDescription(rs.getString("description"));
-		return fornecedor;
+	@Override
+	protected UnitMeasurement createEntity(final ResultSet rs) throws SQLException {
+		UnitMeasurement unit = new UnitMeasurement();
+		unit.setId(rs.getLong("id"));
+		unit.setName(rs.getString("name"));
+		return unit;
 	}
 
 }

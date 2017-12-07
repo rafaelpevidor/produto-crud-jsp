@@ -12,16 +12,27 @@ import java.util.Calendar;
 import br.com.psystems.crud.infra.ConnectionFactory;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.model.BaseEntity;
 
 /**
  * @author developer
  *
  */
-public abstract class AbstractTest {
+public abstract class AbstractTest<T extends BaseEntity> {
 	
 	protected static final long ALIAS = Calendar.getInstance().getTimeInMillis();
+	
+	protected abstract T getEntity();
+	
+	public void truncate(String tableName) throws SQLException, DAOException {
+		truncate(tableName, false);
+	}
+	
+	public void truncateCascade(String tableName) throws SQLException, DAOException {
+		truncate(tableName, true);
+	}
 
-	public void truncate(String tableName, boolean cascade) throws SQLException, DAOException {
+	private void truncate(String tableName, boolean cascade) throws SQLException, DAOException {
 		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
 		
 		PreparedStatement ps = con.prepareStatement("TRUNCATE TABLE "

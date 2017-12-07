@@ -17,30 +17,31 @@ import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.UserDAO;
+import br.com.psystems.crud.model.dao.BaseDAO;
 import br.com.psystems.crud.model.enums.RoleEnum;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class UserDAOImpl extends AbstractDAO implements UserDAO {
+public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2437227275966264997L;
 
-	public UserDAOImpl() throws DAOException {
+	public UserDAO() throws DAOException {
 		super();
 	}
 	
-	public UserDAOImpl(ConnectionManager connectionManager) throws DAOException {
+	public UserDAO(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
-	private static Logger logger = Logger.getLogger(UserDAOImpl.class);
+	private static Logger logger = Logger.getLogger(UserDAO.class);
 	
+	public static final String TABLE_NAME = "tb_user";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, email, password, role) VALUES (?,?,?,?)";
 	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
@@ -129,7 +130,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 			
-			return getUser(ps.executeQuery());
+			return (User) getEntity(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -150,7 +151,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
 			ps.setString(1, "%"+name+"%");
 			
-			return getUsers(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -170,7 +171,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 		
-			return getUsers(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -180,25 +181,27 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 		}
 	}
 	
-	private List<User> getUsers(final ResultSet rs) throws SQLException {
+	@Override
+	protected List<User> getEntityList(final ResultSet rs) throws SQLException {
 
 		List<User> users = new ArrayList<>();
-		
-		while (rs.next()) {
-			users.add(createUser(rs));
-		}
+		while (rs.next())
+			users.add(createEntity(rs));
+
 		return users;
 	}
 	
-	private User getUser(final ResultSet rs) throws SQLException {
+	@Override
+	protected User getEntity(final ResultSet rs) throws SQLException {
 		User user = null;
-		while (rs.next()) {
-			user = createUser(rs);
-		}
+		while (rs.next())
+			user = createEntity(rs);
+		
 		return user;
 	}
 	
-	private User createUser(final ResultSet rs) throws SQLException {
+	@Override
+	protected User createEntity(final ResultSet rs) throws SQLException {
 
 		User user = new User();
 		user.setId(rs.getLong("id"));

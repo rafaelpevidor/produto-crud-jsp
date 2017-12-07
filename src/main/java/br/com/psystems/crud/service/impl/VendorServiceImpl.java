@@ -12,7 +12,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.model.dao.impl.VendorDAO;
 import br.com.psystems.crud.service.VendorService;
 
 /**

@@ -21,13 +21,13 @@ public class Product implements BaseEntity {
 	private static final long serialVersionUID = 6048749574413769644L;
 
 	private Long id;
-	private Long vendorId;
+//	private Long vendorId;
 	private Long unitMeasurementId;
 	private String name;
 	private String description;
 	private BigDecimal mininumQuantity;
-	private Boolean ownManufacturing;
-	private Vendor vendor;
+	private Boolean ownManufacturing = Boolean.FALSE;
+//	private Vendor vendor;
 	private UnitMeasurement unitMeasurement;
 	private List<String> tags;
 	private List<Long> references;
@@ -38,14 +38,6 @@ public class Product implements BaseEntity {
 	
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public Long getVendorId() {
-		return vendorId;
-	}
-	
-	public void setVendorId(Long vendorId) {
-		this.vendorId = vendorId;
 	}
 	
 	public String getName() {
@@ -62,17 +54,6 @@ public class Product implements BaseEntity {
 	
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	
-	public Vendor getVendor() {
-		if (null == vendor)
-			vendor = new Vendor();
-		return vendor;
-	}
-
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
-		setVendorId(null != vendor && null != vendor.getId()?vendor.getId():null);
 	}
 	
 	public List<String> getTags() {
@@ -137,7 +118,6 @@ public class Product implements BaseEntity {
 		result = prime * result + ((references == null) ? 0 : references.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((unitMeasurementId == null) ? 0 : unitMeasurementId.hashCode());
-		result = prime * result + ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
 	}
 
@@ -189,11 +169,6 @@ public class Product implements BaseEntity {
 			if (other.unitMeasurementId != null)
 				return false;
 		} else if (!unitMeasurementId.equals(other.unitMeasurementId))
-			return false;
-		if (vendorId == null) {
-			if (other.vendorId != null)
-				return false;
-		} else if (!vendorId.equals(other.vendorId))
 			return false;
 		return true;
 	}

@@ -43,8 +43,9 @@ public class ConnectionManager {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new DAOException(e1);
+				throw new DAOException("Desculpe, não foi possível executar esta ação. O sistema não conseguiu se recuperar.", e1);
 			}
+			throw new DAOException("Desculpe, não foi possível executar esta ação.");
 		} finally {
 			close(connection);
 		}

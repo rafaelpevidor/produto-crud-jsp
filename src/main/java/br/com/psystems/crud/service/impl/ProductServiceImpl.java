@@ -9,7 +9,7 @@ import br.com.psystems.crud.infra.exception.BusinessException;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.model.dao.ProductDAO;
+import br.com.psystems.crud.model.dao.impl.ProductDAO;
 import br.com.psystems.crud.service.ProductService;
 
 /**
@@ -64,6 +64,12 @@ public class ProductServiceImpl extends AbstractCrudService implements ProductSe
 	public void validateRequiredFieldsOf(Product entity) throws BusinessException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void validateRequiredFieldByBusinessRuleOf(Product entity) throws BusinessException {
+		// TODO Auto-generated method stub
+		// se o produto é de fabricação própria o fornecedor deve ser nulo (e vice-versa)
 	}
 
 }

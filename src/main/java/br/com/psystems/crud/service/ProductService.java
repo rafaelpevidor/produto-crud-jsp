@@ -3,6 +3,7 @@
  */
 package br.com.psystems.crud.service;
 
+import br.com.psystems.crud.infra.exception.BusinessException;
 import br.com.psystems.crud.model.Product;
 
 /**
@@ -11,4 +12,5 @@ import br.com.psystems.crud.model.Product;
  */
 public interface ProductService extends BaseService<Product> {
 
+	public void validateRequiredFieldByBusinessRuleOf(Product entity) throws BusinessException;
 }

@@ -19,36 +19,36 @@ import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.model.dao.ProductDAO;
+import br.com.psystems.crud.model.dao.BaseDAO;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
+public class ProductDAO extends AbstractDAO<Product> implements BaseDAO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1367862676478841213L;
 
-	public ProductDAOImpl() throws DAOException {
+	public ProductDAO() throws DAOException {
 		super();
 	}
 	
-	public ProductDAOImpl(ConnectionManager connectionManager) throws DAOException {
+	public ProductDAO(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
-	protected static final String SQL_FIND_BY_FORNECEDOR = "SELECT * FROM " + TABLE_NAME + " WHERE vendor_id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (vendor_id, name, mininum_quantity, tags, reference, own_manufacturing, description) VALUES (?,?,?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET vendor_id = ?, name = ?, mininum_quantity = ?, tags = ?, reference = ?, own_manufacturing = ?, description = ? WHERE id = ?";
+	public static final String TABLE_NAME = "tb_product";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, mininum_quantity, tags, reference, own_manufacturing, description) VALUES (?,?,?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, mininum_quantity = ?, tags = ?, reference = ?, own_manufacturing = ?, description = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE name like ?";
 	private static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 
-	private static Logger logger = Logger.getLogger(ProductDAOImpl.class);
+	private static Logger logger = Logger.getLogger(ProductDAO.class);
 
 	@Override
 	public void save(Product entity) throws DAOException, SystemException {
@@ -59,14 +59,14 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
-				ps.setLong(1, entity.getVendorId());
-				ps.setString(2, entity.getName());
+				ps.setString(1, entity.getName());
+				ps.setBigDecimal(2, entity.getMininumQuantity());
 				ps.setArray(3, getTagsAsSQLArray(entity, connection));
 				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
-				ps.setBigDecimal(5, entity.getMininumQuantity());
+				ps.setBoolean(5, entity.getOwnManufacturing());
 				ps.setString(6, entity.getDescription());
 
-				ps.executeUpdate();
+				ps.execute();
 
 				logger.info("Produto inserido com sucesso!\n ".concat(entity.toString()));
 			}
@@ -83,11 +83,12 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
-				ps.setLong(1, entity.getVendorId());
-				ps.setString(2, entity.getName());
+				
+				ps.setString(1, entity.getName());
+				ps.setBigDecimal(2, entity.getMininumQuantity());
 				ps.setArray(3, getTagsAsSQLArray(entity, connection));
 				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
-				ps.setBigDecimal(5, entity.getMininumQuantity());
+				ps.setBoolean(5, entity.getOwnManufacturing());
 				ps.setString(6, entity.getDescription());
 				ps.setLong(7, entity.getId());
 
@@ -137,7 +138,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
 
-			return getProduct(ps.executeQuery());
+			return getEntity(ps.executeQuery());
 		} catch (Exception e) {
 			set(e);
 			return null;
@@ -157,7 +158,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NAME);
 			ps.setString(1, "%"+name+"%");
 			
-			return getProducts(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -178,7 +179,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 			
-			return getProducts(ps.executeQuery());
+			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -188,32 +189,34 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 		}
 	}
 
-	private Product getProduct(final ResultSet rs) throws SQLException, DAOException {
+	@Override
+	protected Product getEntity(final ResultSet rs) throws SQLException {
 
 		Product product = null;
 
 		while (rs.next()) {
-			product = createProduct(rs);
+			product = createEntity(rs);
 		}
 
 		return product;
 	}
 	
-	private List<Product> getProducts(final ResultSet rs) throws SQLException {
+	@Override
+	protected List<Product> getEntityList(final ResultSet rs) throws SQLException {
 		List<Product> products = new ArrayList<>();
 		
 		while (rs.next()) {
-			products.add(createProduct(rs));
+			products.add(createEntity(rs));
 		}
 		
 		return products;
 	}
 
-	private Product createProduct(final ResultSet rs) throws SQLException {
+	@Override
+	protected Product createEntity(final ResultSet rs) throws SQLException {
 		
 		Product product = new Product();
 		product.setDescription(rs.getString("description"));
-		product.setVendorId(rs.getLong("vendor_id"));
 		product.setId(rs.getLong("id"));
 		product.setName(rs.getString("name"));
 		product.setMininumQuantity(rs.getBigDecimal("mininum_quantity"));

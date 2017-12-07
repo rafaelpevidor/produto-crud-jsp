@@ -3,27 +3,30 @@
  */
 package br.com.psystems.crud.test.integration;
 
+import static org.junit.Assert.*;
+
 import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.psystems.crud.infra.ConnectionManager;
+import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.UnitMeasurement;
-import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl;
+import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO;
 
 /**
  * @author developer
  *
  */
-public class UnitMeasurementDAOTest extends AbstractTest {
+public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	
 	private UnitMeasurement entity;
-	private UnitMeasurementDAOImpl dao;
+	private UnitMeasurementDAO dao;
 
 	/**
 	 * @throws java.lang.Exception
@@ -31,20 +34,20 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		entity = new UnitMeasurement("Unit Name " + ALIAS);
-		dao = new UnitMeasurementDAOImpl();
-		
-		truncate(UnitMeasurementDAOImpl.TABLE_NAME, true);
+		dao = new UnitMeasurementDAO(new ConnectionManager(EnviromentEnum.TEST));
+		entity = getEntity();
 	}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@After
-	public void tearDown() throws Exception {}
+	public void tearDown() throws Exception {
+		truncateCascade(UnitMeasurementDAO.TABLE_NAME);
+	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#delete(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -54,25 +57,25 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
 		
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertEquals(entity.getId(), id);
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertEquals(entity.getId(), id);
 		
 		dao.delete(id);
 		
 		entity = null;
 		entity = dao.findById(id);
 		
-		Assert.assertNull(entity);
+		assertNull(entity);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#save(br.com.psystems.crud.model.UnitMeasurement)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#save(br.com.psystems.crud.model.UnitMeasurement)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -82,18 +85,18 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
 		
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertEquals(entity.getId(), id);
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertEquals(entity.getId(), id);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#update(br.com.psystems.crud.model.UnitMeasurement)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#update(br.com.psystems.crud.model.UnitMeasurement)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -103,26 +106,26 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
 		
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertEquals(entity.getId(), id);
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertEquals(entity.getId(), id);
 		
 		entity.setName("Pacote");
 		entity = dao.update(entity);
 		
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertTrue(entity.getId().equals(id));
-		Assert.assertEquals(entity.getName(), "Pacote");
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertTrue(entity.getId().equals(id));
+		assertEquals(entity.getName(), "Pacote");
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -132,18 +135,18 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
 		
-		Assert.assertNotNull(entity);
-		Assert.assertNotNull(entity.getId());
-		Assert.assertEquals(entity.getId(), id);
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertEquals(entity.getId(), id);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -160,14 +163,14 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		List<UnitMeasurement> units = dao.findByName("tro");
 		
-		Assert.assertTrue(null != units);
-		Assert.assertTrue(!units.isEmpty());
-		Assert.assertTrue(units.size() == 1 && null != units.get(0).getId());
-		Assert.assertTrue(units.get(0).getName().equals("Litro"));
+		assertTrue(null != units);
+		assertTrue(!units.isEmpty());
+		assertTrue(units.size() == 1 && null != units.get(0).getId());
+		assertTrue(units.get(0).getName().equals("Litro"));
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -184,9 +187,40 @@ public class UnitMeasurementDAOTest extends AbstractTest {
 		
 		List<UnitMeasurement> units = dao.getAll();
 		
-		Assert.assertTrue(null != units);
-		Assert.assertTrue(!units.isEmpty());
-		Assert.assertTrue(units.size() == 2 && null != units.get(0).getId());
+		assertTrue(null != units);
+		assertTrue(!units.isEmpty());
+		assertTrue(units.size() == 2 && null != units.get(0).getId());
+	}
+	
+	@Test(expected = DAOException.class)
+	public void testSaveUnitOfMeasurementWithNullValues() throws DAOException, SystemException, SQLException {
+		
+		entity.setName(null);
+		dao.save(entity);
+		
 	}
 
+	@Test(expected = DAOException.class)
+	public void testUpdateUnitOfMeasurementToNullValues() throws DAOException, SystemException, SQLException {
+		
+		dao.save(entity);
+		
+		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		
+		entity = null;
+		entity = dao.findById(id);
+		
+		assertNotNull(entity);
+		assertNotNull(entity.getId());
+		assertEquals(entity.getId(), id);
+		
+		entity.setName(null);
+		entity = dao.update(entity);
+		
+	}
+
+	@Override
+	protected UnitMeasurement getEntity() {
+		return new UnitMeasurement("Unit Name " + ALIAS);
+	}
 }

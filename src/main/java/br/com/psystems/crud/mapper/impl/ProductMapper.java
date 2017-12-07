@@ -25,7 +25,6 @@ public final class ProductMapper implements BaseMapper<Product> {
 		try {
 			produto.setDescription(request.getParameter("description"));
 			produto.setName(request.getParameter("name"));
-			produto.setVendorId(NumberUtils.createLong((String) request.getParameter("vendorid")));
 			produto.setId(NumberUtils.createLong((String) request.getParameter("id")));
 			
 		} catch (Exception e) {

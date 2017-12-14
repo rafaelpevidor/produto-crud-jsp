@@ -16,84 +16,78 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
-import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.BaseDAO;
-import br.com.psystems.crud.model.enums.RoleEnum;
+import br.com.psystems.crud.model.UnitMeasurement;
+import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class UserDAO extends AbstractDAO<User> implements BaseDAO {
-	
+public class UnitMeasurementDAOImpl extends AbstractDAO implements UnitMeasurementDAO {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2437227275966264997L;
+	private static final long serialVersionUID = -5745258755017204398L;
 
-	public UserDAO() throws DAOException {
+	public UnitMeasurementDAOImpl() throws DAOException {
 		super();
 	}
 	
-	public UserDAO(ConnectionManager connectionManager) throws DAOException {
+	public UnitMeasurementDAOImpl(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
-	private static Logger logger = Logger.getLogger(UserDAO.class);
-	
-	public static final String TABLE_NAME = "tb_user";
+	public static final String TABLE_NAME = "tb_unit_measurement";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, email, password, role) VALUES (?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name) VALUES (?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
 	
+	private static Logger logger = Logger.getLogger(UnitMeasurementDAOImpl.class);
 	
 	@Override
-	public void save(User entity) throws DAOException, SystemException {
+	public void save(UnitMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
 			@Override
-			public void execute(Connection connection) throws SQLException {
+			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
+				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getEmail());
-				ps.setString(3, entity.getPassword());
-				ps.setString(4, entity.getRole().name());
-				ps.execute();
-				
-				logger.info("Salvo com sucesso!");
+
+				ps.executeUpdate();
+
+				logger.info("Unidade de Medida inserida com sucesso!\n ".concat(entity.toString()));
 			}
 		});
 	}
 
 	@Override
-	public User update(User entity) throws DAOException, SystemException {
+	public UnitMeasurement update(UnitMeasurement entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
 			@Override
-			public void execute(Connection connection) throws SQLException {
-
+			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
+				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getEmail());
-				ps.setString(3, entity.getPassword());
-				ps.setString(4, entity.getRole().name());
-				ps.setLong(5, entity.getId());
+				ps.setLong(2, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
 				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
-				} else {
-					logger.info("Atualizado com sucesso!\n ".concat(entity.toString()));
 				}
+
+				logger.info("Unidade de Medida atualizada com sucesso!\n ".concat(entity.toString()));
 			}
 		});
-
+		
 		return findById(entity.getId());
 	}
 
@@ -104,23 +98,23 @@ public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 			
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-
+				
 				PreparedStatement ps = getPreparedStatement(connection, SQL_DELETE);
 				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
 
 				if (0 >= qtdLinhas) {
-					logger.info("Nenhum registro apagado.");
-				} else {
-					logger.info("Usuário apagado com sucesso!");
+					throw new DAOException("Nenhum registro apagado.");
 				}
+
+				logger.info("Unidade de Medida apagada com sucesso!");
 			}
 		});
 	}
 
 	@Override
-	public User findById(Long id) throws DAOException, SystemException {
+	public UnitMeasurement findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -129,8 +123,8 @@ public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
-			
-			return (User) getEntity(ps.executeQuery());
+
+			return getEntity(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -138,18 +132,18 @@ public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 		} finally {
 			connectionManager.close(con);
 		}
+
 	}
 
 	@Override
-	public List<User> findByName(String name) throws DAOException, SystemException {
+	public List<UnitMeasurement> findByName(String nome) throws DAOException, SystemException {
 
 		Connection con = null;
 		
 		try {
 			con = connectionManager.getConnection();
-			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
-			ps.setString(1, "%"+name+"%");
+			ps.setString(1, "%" + nome + "%");
 			
 			return getEntityList(ps.executeQuery());
 			
@@ -162,15 +156,14 @@ public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 	}
 
 	@Override
-	public List<User> getAll() throws DAOException, SystemException {
+	public List<UnitMeasurement> getAll() throws DAOException, SystemException {
 		
 		Connection con = null;
 		
 		try {
 			con = connectionManager.getConnection();
-			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
-		
+			
 			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
@@ -182,35 +175,30 @@ public class UserDAO extends AbstractDAO<User> implements BaseDAO {
 	}
 	
 	@Override
-	protected List<User> getEntityList(final ResultSet rs) throws SQLException {
-
-		List<User> users = new ArrayList<>();
-		while (rs.next())
-			users.add(createEntity(rs));
-
-		return users;
-	}
-	
-	@Override
-	protected User getEntity(final ResultSet rs) throws SQLException {
-		User user = null;
-		while (rs.next())
-			user = createEntity(rs);
+	protected List<UnitMeasurement> getEntityList(final ResultSet rs) throws SQLException {
+		List<UnitMeasurement> units = new ArrayList<>();
 		
-		return user;
+		while (rs.next())
+			units.add(createEntity(rs));
+		
+		return units;
 	}
-	
-	@Override
-	protected User createEntity(final ResultSet rs) throws SQLException {
 
-		User user = new User();
-		user.setId(rs.getLong("id"));
-		user.setName(rs.getString("name"));
-		user.setEmail(rs.getString("email"));
-		user.setPassword(rs.getString("password"));
-		user.setRole(RoleEnum.valueOf(rs.getString("role")));
-	
-		return user;
+	@Override
+	protected UnitMeasurement getEntity(final ResultSet rs) throws SQLException {
+		UnitMeasurement unit = null;
+		while (rs.next()) {
+			unit = createEntity(rs);
+		}
+		return unit;
+	}
+
+	@Override
+	protected UnitMeasurement createEntity(final ResultSet rs) throws SQLException {
+		UnitMeasurement unit = new UnitMeasurement();
+		unit.setId(rs.getLong("id"));
+		unit.setName(rs.getString("name"));
+		return unit;
 	}
 
 }

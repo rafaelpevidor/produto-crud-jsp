@@ -12,7 +12,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.impl.VendorDAO;
+import br.com.psystems.crud.model.dao.VendorDAO;
 import br.com.psystems.crud.service.VendorService;
 
 /**
@@ -22,7 +22,7 @@ import br.com.psystems.crud.service.VendorService;
 public class VendorServiceImpl extends AbstractCrudService implements VendorService {
 	
 	public VendorServiceImpl(VendorDAO dao) {
-		super();
+		super(dao);
 		this.dao = dao;
 	}
 
@@ -66,7 +66,7 @@ public class VendorServiceImpl extends AbstractCrudService implements VendorServ
 	@Override
 	public void validateRequiredFieldsOf(Vendor entity) throws BusinessException, SystemException {
 		try {
-			Validate.notEmpty(entity.getName(), "O campo {0} é obrigatório.", "'nome'");
+			Validate.notEmpty(entity.getName(), "O campo 'nome' é obrigatório.");
 		} catch (NullPointerException e) {
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Exception e) {

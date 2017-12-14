@@ -20,7 +20,8 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.impl.UserDAO;
+import br.com.psystems.crud.model.dao.UserDAO;
+import br.com.psystems.crud.model.dao.impl.UserDAOImpl;
 import br.com.psystems.crud.model.enums.RoleEnum;
 import br.com.psystems.crud.test.builder.UserBuilder;
 
@@ -38,7 +39,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		dao = new UserDAO(new ConnectionManager(EnviromentEnum.TEST));
+		dao = new UserDAOImpl(new ConnectionManager(EnviromentEnum.TEST));
 		entity = getEntity(); 
 	}
 
@@ -47,18 +48,18 @@ public class UserDAOTest extends AbstractTest<User> {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncate(UserDAO.TABLE_NAME);
+		truncate(UserDAOImpl.TABLE_NAME);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#delete(java.lang.Long)}.
 	 */
 	@Test
 	public void testDelete() throws DAOException, SystemException, SQLException {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -75,7 +76,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#save(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#save(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -85,7 +86,7 @@ public class UserDAOTest extends AbstractTest<User> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -96,7 +97,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#update(br.com.psystems.crud.model.User)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#update(br.com.psystems.crud.model.User)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -106,7 +107,7 @@ public class UserDAOTest extends AbstractTest<User> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -126,7 +127,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -136,7 +137,7 @@ public class UserDAOTest extends AbstractTest<User> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -147,7 +148,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -167,7 +168,7 @@ public class UserDAOTest extends AbstractTest<User> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAO#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UserDAOImpl#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -197,7 +198,7 @@ public class UserDAOTest extends AbstractTest<User> {
 
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 		
 		entity = dao.findById(id);
 		

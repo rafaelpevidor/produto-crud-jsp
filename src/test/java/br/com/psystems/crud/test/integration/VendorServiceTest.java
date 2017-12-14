@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,7 +21,7 @@ import br.com.psystems.crud.infra.exception.BusinessException;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.impl.VendorDAO;
+import br.com.psystems.crud.model.dao.impl.VendorDAOImpl;
 import br.com.psystems.crud.service.VendorService;
 import br.com.psystems.crud.service.impl.VendorServiceImpl;
 import br.com.psystems.crud.test.builder.VendorBuilder;
@@ -42,7 +41,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 	@Before
 	public void setUp() throws Exception {
 		entity = getEntity();
-		service = new VendorServiceImpl(new VendorDAO(new ConnectionManager(EnviromentEnum.DEV)));
+		service = new VendorServiceImpl(new VendorDAOImpl(new ConnectionManager(EnviromentEnum.DEV)));
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncateCascade(VendorDAO.TABLE_NAME);
+		truncateCascade(VendorDAOImpl.TABLE_NAME);
 	}
 
 	/**
@@ -64,7 +63,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -84,7 +83,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -113,7 +112,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -141,7 +140,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -190,10 +189,13 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 
 	/**
 	 * Test method for {@link br.com.psystems.crud.service.impl.VendorServiceImpl#validateRequiredFieldsOf(br.com.psystems.crud.model.Vendor)}.
+	 * @throws SystemException 
+	 * @throws BusinessException 
 	 */
 	@Test(expected = BusinessException.class)
-	public void testValidateRequiredFieldsOf() {
-		fail("Not yet implemented"); // TODO
+	public void testValidateRequiredFieldsOf() throws BusinessException, SystemException {
+		entity.setName(null);
+		service.validateRequiredFieldsOf(entity);
 	}
 
 	@Override

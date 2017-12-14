@@ -12,7 +12,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.UnitMeasurement;
-import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO;
+import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
 import br.com.psystems.crud.service.UnitMeasurementService;
 
 /**
@@ -22,7 +22,7 @@ import br.com.psystems.crud.service.UnitMeasurementService;
 public class UnitMeasurementServiceImpl extends AbstractCrudService implements UnitMeasurementService {
 
 	public UnitMeasurementServiceImpl(UnitMeasurementDAO dao) {
-		super();
+		super(dao);
 		this.dao = dao;
 	}
 
@@ -66,7 +66,7 @@ public class UnitMeasurementServiceImpl extends AbstractCrudService implements U
 	@Override
 	public void validateRequiredFieldsOf(UnitMeasurement entity) throws BusinessException, SystemException {
 		try {
-			Validate.notEmpty(entity.getName(), "O campo {0} é obrigatório.", "'nome'");
+			Validate.notEmpty(entity.getName(), "O campo 'nome' é obrigatório.");
 		} catch (NullPointerException e) {
 			throw new BusinessException(e.getMessage(), e);
 		} catch (Exception e) {

@@ -3,7 +3,10 @@
  */
 package br.com.psystems.crud.test.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,12 +15,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.impl.VendorDAO;
+import br.com.psystems.crud.model.dao.VendorDAO;
+import br.com.psystems.crud.model.dao.impl.VendorDAOImpl;
 import br.com.psystems.crud.test.builder.VendorBuilder;
 
 /**
@@ -34,7 +38,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		dao = new VendorDAO(new ConnectionManager(EnviromentEnum.TEST));
+		dao = new VendorDAOImpl(new ConnectionManager(EnviromentEnum.TEST));
 		entity = getEntity();
 	}
 
@@ -43,11 +47,11 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncateCascade(VendorDAO.TABLE_NAME);
+		truncateCascade(VendorDAOImpl.TABLE_NAME);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#delete(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -57,7 +61,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -75,7 +79,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#save(br.com.psystems.crud.model.Vendor)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#save(br.com.psystems.crud.model.Vendor)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -85,7 +89,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -95,7 +99,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#update(br.com.psystems.crud.model.Vendor)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#update(br.com.psystems.crud.model.Vendor)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -105,7 +109,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -124,7 +128,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -134,7 +138,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);
@@ -145,7 +149,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -165,7 +169,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAO#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.VendorDAOImpl#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -194,7 +198,7 @@ public class VendorDAOTest extends AbstractTest<Vendor> {
 
 		dao.save(entity);
 
-		Long id = getLastIdFrom(VendorDAO.TABLE_NAME);
+		Long id = getLastIdFrom(VendorDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = dao.findById(id);

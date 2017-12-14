@@ -9,7 +9,7 @@ import br.com.psystems.crud.infra.exception.BusinessException;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.model.dao.impl.ProductDAO;
+import br.com.psystems.crud.model.dao.ProductDAO;
 import br.com.psystems.crud.service.ProductService;
 
 /**
@@ -17,17 +17,18 @@ import br.com.psystems.crud.service.ProductService;
  *
  */
 public class ProductServiceImpl extends AbstractCrudService implements ProductService {
-	
-	public ProductServiceImpl(ProductDAO dao) {
-		super();
-		this.dao = dao;
-	}
+
+
+		public ProductServiceImpl(ProductDAO dao) {
+			super(dao);
+			this.dao = dao;
+		}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3969917881461784985L;
-	
+
 	private ProductDAO dao; 
 
 	@Override
@@ -63,7 +64,7 @@ public class ProductServiceImpl extends AbstractCrudService implements ProductSe
 	@Override
 	public void validateRequiredFieldsOf(Product entity) throws BusinessException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

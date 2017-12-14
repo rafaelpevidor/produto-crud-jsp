@@ -11,7 +11,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.BaseEntity;
 
-public abstract class AbstractDAO<T extends BaseEntity> {
+public abstract class AbstractDAO {
 
 	public AbstractDAO() throws DAOException {
 		this.connectionManager = new ConnectionManager();
@@ -35,14 +35,7 @@ public abstract class AbstractDAO<T extends BaseEntity> {
 			throw new SystemException(exception);
 	}
 	
-	public abstract void save(T entity) throws DAOException, SystemException;
-	public abstract T update(T entity) throws DAOException, SystemException;
-	public abstract void delete(Long id) throws DAOException, SystemException;
-	public abstract T findById(Long id) throws DAOException, SystemException;
-	public abstract List<T> findByName(String nome) throws DAOException, SystemException;
-	public abstract List<T> getAll() throws DAOException, SystemException;
-	
-	protected abstract List<T> getEntityList(final ResultSet rs) throws SQLException;
-	protected abstract T getEntity(final ResultSet rs) throws SQLException, DAOException;
-	protected abstract T createEntity(final ResultSet rs) throws SQLException;
+	protected abstract List<? extends BaseEntity> getEntityList(final ResultSet rs) throws SQLException;
+	protected abstract BaseEntity getEntity(final ResultSet rs) throws SQLException, DAOException;
+	protected abstract BaseEntity createEntity(final ResultSet rs) throws SQLException;
 }

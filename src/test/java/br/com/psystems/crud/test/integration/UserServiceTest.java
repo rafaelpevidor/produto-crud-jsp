@@ -18,7 +18,7 @@ import br.com.psystems.crud.infra.exception.BusinessException;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.impl.UserDAO;
+import br.com.psystems.crud.model.dao.impl.UserDAOImpl;
 import br.com.psystems.crud.model.enums.RoleEnum;
 import br.com.psystems.crud.service.UserService;
 import br.com.psystems.crud.service.impl.UserServiceImpl;
@@ -32,12 +32,12 @@ public class UserServiceTest extends AbstractTest<User> {
 	@Before
 	public void setUp() throws Exception {
 		entity = getEntity();
-		service = new UserServiceImpl(new UserDAO(new ConnectionManager(EnviromentEnum.DEV)));
+		service = new UserServiceImpl(new UserDAOImpl(new ConnectionManager(EnviromentEnum.DEV)));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		truncate(UserDAO.TABLE_NAME);
+		truncate(UserDAOImpl.TABLE_NAME);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -59,7 +59,7 @@ public class UserServiceTest extends AbstractTest<User> {
 	public void testUpdate() throws DAOException, SystemException, SQLException {
 		service.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -82,7 +82,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 		service.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -102,7 +102,7 @@ public class UserServiceTest extends AbstractTest<User> {
 	public void testFindById() throws DAOException, SystemException, SQLException {
 		service.save(entity);
 
-		Long id = getLastIdFrom(UserDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
 
 		entity = null;
 		entity = service.findById(id);
@@ -145,6 +145,14 @@ public class UserServiceTest extends AbstractTest<User> {
 		
 		entity = getEntity();
 		entity.setEmail(null);
+		service.validateRequiredFieldsOf(entity);
+		
+		entity = getEntity();
+		entity.setPassword(null);
+		service.validateRequiredFieldsOf(entity);
+		
+		entity = getEntity();
+		entity.setRole(null);
 		service.validateRequiredFieldsOf(entity);
 	}
 

@@ -1,6 +1,9 @@
 package br.com.psystems.crud.test.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -16,7 +19,8 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.model.dao.impl.ProductDAO;
+import br.com.psystems.crud.model.dao.ProductDAO;
+import br.com.psystems.crud.model.dao.impl.ProductDAOImpl;
 import br.com.psystems.crud.test.builder.ProductBuilder;
 
 public class ProductDAOTest extends AbstractTest<Product> {
@@ -26,16 +30,13 @@ public class ProductDAOTest extends AbstractTest<Product> {
 
 	@Before
 	public void setUp() throws Exception {
-
-		dao = new ProductDAO(new ConnectionManager(EnviromentEnum.TEST));
-		
 		entity = getEntity();
-		
+		dao = new ProductDAOImpl(new ConnectionManager(EnviromentEnum.TEST));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		truncateCascade(ProductDAO.TABLE_NAME);
+		truncateCascade(ProductDAOImpl.TABLE_NAME);
 	}
 
 	@Test
@@ -43,7 +44,7 @@ public class ProductDAOTest extends AbstractTest<Product> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -64,7 +65,7 @@ public class ProductDAOTest extends AbstractTest<Product> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -79,7 +80,7 @@ public class ProductDAOTest extends AbstractTest<Product> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -102,7 +103,7 @@ public class ProductDAOTest extends AbstractTest<Product> {
 
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -161,7 +162,7 @@ public class ProductDAOTest extends AbstractTest<Product> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);

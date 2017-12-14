@@ -3,7 +3,10 @@
  */
 package br.com.psystems.crud.test.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,12 +15,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.UnitMeasurement;
-import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO;
+import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
+import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl;
 
 /**
  * @author developer
@@ -33,9 +37,8 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		
-		dao = new UnitMeasurementDAO(new ConnectionManager(EnviromentEnum.TEST));
 		entity = getEntity();
+		dao = new UnitMeasurementDAOImpl(new ConnectionManager(EnviromentEnum.TEST));
 	}
 
 	/**
@@ -43,11 +46,11 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncateCascade(UnitMeasurementDAO.TABLE_NAME);
+		truncateCascade(UnitMeasurementDAOImpl.TABLE_NAME);
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#delete(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#delete(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -57,7 +60,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -75,7 +78,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#save(br.com.psystems.crud.model.UnitMeasurement)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#save(br.com.psystems.crud.model.UnitMeasurement)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -85,7 +88,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -96,7 +99,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#update(br.com.psystems.crud.model.UnitMeasurement)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#update(br.com.psystems.crud.model.UnitMeasurement)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -106,7 +109,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -125,7 +128,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#findById(java.lang.Long)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#findById(java.lang.Long)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 * @throws SQLException 
@@ -135,7 +138,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);
@@ -146,7 +149,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#findByName(java.lang.String)}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#findByName(java.lang.String)}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -170,7 +173,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	}
 
 	/**
-	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAO#getAll()}.
+	 * Test method for {@link br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl#getAll()}.
 	 * @throws SystemException 
 	 * @throws DAOException 
 	 */
@@ -205,7 +208,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 		
 		dao.save(entity);
 		
-		Long id = getLastIdFrom(UnitMeasurementDAO.TABLE_NAME);
+		Long id = getLastIdFrom(UnitMeasurementDAOImpl.TABLE_NAME);
 		
 		entity = null;
 		entity = dao.findById(id);

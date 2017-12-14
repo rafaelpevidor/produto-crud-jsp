@@ -54,7 +54,7 @@ public class ConnectionManager {
 	public Connection getConnection() throws DAOException {
 		if (null == enviroment)
 			enviroment = getEnviroment();
-		return ConnectionFactory.getConnection(enviroment);
+		return ConnectionPool.getInstance(enviroment).getConnection();
 	}
 	
 	private EnviromentEnum getEnviroment() {
@@ -70,14 +70,15 @@ public class ConnectionManager {
 
 	public void close(Connection connection) throws DAOException {
 
-		try {
-			if (null != connection && !connection.isClosed()) {
-				connection.close();
-			}
-		} catch (Exception e) {
-			logger.error("Houve um erro ao fechar a conexão com o banco de dados.",e);
-			throw new DAOException(e);
-		}
+//		try {
+//			if (null != connection && !connection.isClosed()) {
+//				connection.close();
+//			}
+//		} catch (Exception e) {
+//			logger.error("Houve um erro ao fechar a conexão com o banco de dados.",e);
+//			throw new DAOException(e);
+//		}
+		ConnectionPool.getInstance(enviroment).releaseConnection(connection);
 	}
 	
 }

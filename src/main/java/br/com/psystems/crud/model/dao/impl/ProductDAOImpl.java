@@ -19,24 +19,24 @@ import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.Product;
-import br.com.psystems.crud.model.dao.BaseDAO;
+import br.com.psystems.crud.model.dao.ProductDAO;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class ProductDAO extends AbstractDAO<Product> implements BaseDAO {
+public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1367862676478841213L;
 
-	public ProductDAO() throws DAOException {
+	public ProductDAOImpl() throws DAOException {
 		super();
 	}
 	
-	public ProductDAO(ConnectionManager connectionManager) throws DAOException {
+	public ProductDAOImpl(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
@@ -48,7 +48,7 @@ public class ProductDAO extends AbstractDAO<Product> implements BaseDAO {
 	private static final String SQL_FIND_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE name like ?";
 	private static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 
-	private static Logger logger = Logger.getLogger(ProductDAO.class);
+	private static Logger logger = Logger.getLogger(ProductDAOImpl.class);
 
 	@Override
 	public void save(Product entity) throws DAOException, SystemException {

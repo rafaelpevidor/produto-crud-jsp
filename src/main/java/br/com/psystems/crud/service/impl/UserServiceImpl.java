@@ -13,7 +13,7 @@ import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.User;
-import br.com.psystems.crud.model.dao.impl.UserDAO;
+import br.com.psystems.crud.model.dao.UserDAO;
 import br.com.psystems.crud.service.UserService;
 
 /**
@@ -23,7 +23,7 @@ import br.com.psystems.crud.service.UserService;
 public class UserServiceImpl extends AbstractCrudService implements UserService {
 	
 	public UserServiceImpl(UserDAO dao) {
-		super();
+		super(dao);
 		this.dao = dao;
 	}
 

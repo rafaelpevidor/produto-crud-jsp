@@ -9,8 +9,9 @@ package br.com.psystems.crud.model.enums;
  */
 public enum RoleEnum {
 
-	ADMIN(1,"Admin",""),
-	USER(2,"User","")
+	ROOT(0,"root","super user"),
+	ADMIN(1,"Admin","Admin"),
+	USER(2,"User","User")
 	;
 	
 	private RoleEnum(Integer id, String name, String description) {

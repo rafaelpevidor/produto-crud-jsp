@@ -32,7 +32,7 @@ public class ConnectionFactory {
 	 * @return {@link Connection}
 	 * Retorna uma conexão com o banco de dados a partir do esquema passado como argumento
 	 * */
-	public static Connection getConnection(EnviromentEnum schema) throws DAOException {
+	public static Connection getConnection(EnviromentEnum enviroment) throws DAOException {
 
 		Connection conn = null;
 
@@ -40,9 +40,9 @@ public class ConnectionFactory {
 
 			Class.forName(STR_DRIVER);
 			conn = DriverManager.getConnection(
-					schema.url, 
-					schema.user, 
-					schema.password
+					enviroment.url, 
+					enviroment.user, 
+					enviroment.password
 			);
 			conn.setAutoCommit(false);
 
@@ -60,20 +60,26 @@ public class ConnectionFactory {
 	}
 
 	public enum EnviromentEnum  {
-		PROD(STR_CON,USER,PASSWORD),
-		HML(STR_CON_HML,USER,PASSWORD),
-		TEST(STR_CON_HML,USER,PASSWORD),
-		DEV(STR_CON_HML,USER,PASSWORD)
+		PROD(STR_CON,USER,PASSWORD,15),
+		HML(STR_CON_HML,USER,PASSWORD,15),
+		TEST(STR_CON_HML,USER,PASSWORD,15),
+		DEV(STR_CON_HML,USER,PASSWORD,15)
 		;
 
-		private EnviromentEnum(String url, String user, String password) {
+		private EnviromentEnum(String url, String user, String password, Integer maxConnections) {
 			this.url = url;
 			this.user = user;
 			this.password = password;
+			this.maxConnections = maxConnections;
 		}
 
 		private String url;
 		private String user;
 		private String password;
+		private Integer maxConnections;
+		
+		public Integer getMaxConnections() {
+			return maxConnections;
+		}
 	}
 }

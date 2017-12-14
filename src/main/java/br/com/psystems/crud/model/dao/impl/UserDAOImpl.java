@@ -16,80 +16,84 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.infra.exception.SystemException;
-import br.com.psystems.crud.model.Vendor;
-import br.com.psystems.crud.model.dao.BaseDAO;
+import br.com.psystems.crud.model.User;
+import br.com.psystems.crud.model.dao.UserDAO;
+import br.com.psystems.crud.model.enums.RoleEnum;
 
 /**
  * @author rafael.saldanha
  *
  */
-public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
-
+public class UserDAOImpl extends AbstractDAO implements UserDAO {
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2816283066309636733L;
+	private static final long serialVersionUID = -2437227275966264997L;
 
-	public VendorDAO() throws DAOException {
+	public UserDAOImpl() throws DAOException {
 		super();
 	}
 	
-	public VendorDAO(ConnectionManager connectionManager) throws DAOException {
+	public UserDAOImpl(ConnectionManager connectionManager) throws DAOException {
 		super(connectionManager);
 	}
 
-	public static final String TABLE_NAME = "tb_vendor";
+	private static Logger logger = Logger.getLogger(UserDAOImpl.class);
+	
+	public static final String TABLE_NAME = "tb_user";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description) VALUES (?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, email, password, role) VALUES (?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NOME = "SELECT * FROM " + TABLE_NAME + " WHERE UPPER(name) like UPPER(?)";
 	
-	private static Logger logger = Logger.getLogger(VendorDAO.class);
 	
 	@Override
-	public void save(Vendor entity) throws DAOException, SystemException {
+	public void save(User entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
 			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
+			public void execute(Connection connection) throws SQLException {
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
-
-				ps.executeUpdate();
-
-				logger.info("Fornecedor inserido com sucesso!\n ".concat(entity.toString()));
+				ps.setString(2, entity.getEmail());
+				ps.setString(3, entity.getPassword());
+				ps.setString(4, entity.getRole().name());
+				ps.execute();
+				
+				logger.info("Salvo com sucesso!");
 			}
 		});
 	}
 
 	@Override
-	public Vendor update(Vendor entity) throws DAOException, SystemException {
+	public User update(User entity) throws DAOException, SystemException {
 
 		connectionManager.doInTransaction(new TransactionCallback() {
 			
 			@Override
-			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
+			public void execute(Connection connection) throws SQLException {
+
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
 				ps.setString(1, entity.getName());
-				ps.setString(2, entity.getDescription());
-				ps.setLong(3, entity.getId());
+				ps.setString(2, entity.getEmail());
+				ps.setString(3, entity.getPassword());
+				ps.setString(4, entity.getRole().name());
+				ps.setLong(5, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
 
 				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
+				} else {
+					logger.info("Atualizado com sucesso!\n ".concat(entity.toString()));
 				}
-
-				logger.info("Fornecedor atualizado com sucesso!\n ".concat(entity.toString()));
 			}
 		});
-		
+
 		return findById(entity.getId());
 	}
 
@@ -100,23 +104,23 @@ public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
 			
 			@Override
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
-				
+
 				PreparedStatement ps = getPreparedStatement(connection, SQL_DELETE);
 				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
 
 				if (0 >= qtdLinhas) {
-					throw new DAOException("Nenhum registro apagado.");
+					logger.info("Nenhum registro apagado.");
+				} else {
+					logger.info("Usuário apagado com sucesso!");
 				}
-
-				logger.info("Fornecedor apagado com sucesso!");
 			}
 		});
 	}
 
 	@Override
-	public Vendor findById(Long id) throws DAOException, SystemException {
+	public User findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
 		
@@ -125,8 +129,8 @@ public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
 			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
-
-			return getEntity(ps.executeQuery());
+			
+			return (User) getEntity(ps.executeQuery());
 			
 		} catch (Exception e) {
 			set(e);
@@ -134,18 +138,18 @@ public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
 		} finally {
 			connectionManager.close(con);
 		}
-
 	}
 
 	@Override
-	public List<Vendor> findByName(String nome) throws DAOException, SystemException {
+	public List<User> findByName(String name) throws DAOException, SystemException {
 
 		Connection con = null;
 		
 		try {
 			con = connectionManager.getConnection();
+			
 			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NOME);
-			ps.setString(1, "%" + nome + "%");
+			ps.setString(1, "%"+name+"%");
 			
 			return getEntityList(ps.executeQuery());
 			
@@ -158,14 +162,15 @@ public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
 	}
 
 	@Override
-	public List<Vendor> getAll() throws DAOException, SystemException {
+	public List<User> getAll() throws DAOException, SystemException {
 		
 		Connection con = null;
 		
 		try {
 			con = connectionManager.getConnection();
-			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
 			
+			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
+		
 			return getEntityList(ps.executeQuery());
 			
 		} catch (Exception e) {
@@ -176,30 +181,36 @@ public class VendorDAO extends AbstractDAO<Vendor> implements BaseDAO {
 		}
 	}
 	
-	protected List<Vendor> getEntityList(final ResultSet rs) throws SQLException {
-		List<Vendor> vendors = new ArrayList<>();
-		while (rs.next())
-			vendors.add(createEntity(rs));
-		
-		return vendors;
-	}
-
 	@Override
-	protected Vendor getEntity(final ResultSet rs) throws SQLException {
-		Vendor vendor = null;
-		while (rs.next())
-			vendor = createEntity(rs);
-		
-		return vendor;
-	}
+	protected List<User> getEntityList(final ResultSet rs) throws SQLException {
 
+		List<User> users = new ArrayList<>();
+		while (rs.next())
+			users.add(createEntity(rs));
+
+		return users;
+	}
+	
 	@Override
-	protected Vendor createEntity(final ResultSet rs) throws SQLException {
-		Vendor fornecedor = new Vendor();
-		fornecedor.setId(rs.getLong("id"));
-		fornecedor.setName(rs.getString("name"));
-		fornecedor.setDescription(rs.getString("description"));
-		return fornecedor;
+	protected User getEntity(final ResultSet rs) throws SQLException {
+		User user = null;
+		while (rs.next())
+			user = createEntity(rs);
+		
+		return user;
+	}
+	
+	@Override
+	protected User createEntity(final ResultSet rs) throws SQLException {
+
+		User user = new User();
+		user.setId(rs.getLong("id"));
+		user.setName(rs.getString("name"));
+		user.setEmail(rs.getString("email"));
+		user.setPassword(rs.getString("password"));
+		user.setRole(RoleEnum.valueOf(rs.getString("role")));
+	
+		return user;
 	}
 
 }

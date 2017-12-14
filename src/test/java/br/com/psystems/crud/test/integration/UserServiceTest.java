@@ -57,6 +57,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 	@Test
 	public void testUpdate() throws DAOException, SystemException, SQLException {
+		
 		service.save(entity);
 
 		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
@@ -100,6 +101,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 	@Test
 	public void testFindById() throws DAOException, SystemException, SQLException {
+		
 		service.save(entity);
 
 		Long id = getLastIdFrom(UserDAOImpl.TABLE_NAME);
@@ -114,6 +116,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 	@Test
 	public void testFindByName() throws DAOException, SystemException {
+		
 		entity.setName("Rafael Pevidor");
 
 		service.save(entity);
@@ -128,6 +131,7 @@ public class UserServiceTest extends AbstractTest<User> {
 
 	@Test
 	public void testGetAll() throws DAOException, SystemException {
+		
 		service.save(entity);
 
 		List<User> users = service.getAll();

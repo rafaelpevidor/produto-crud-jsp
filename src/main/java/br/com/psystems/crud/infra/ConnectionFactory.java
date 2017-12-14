@@ -32,7 +32,7 @@ public class ConnectionFactory {
 	 * @return {@link Connection}
 	 * Retorna uma conexão com o banco de dados a partir do esquema passado como argumento
 	 * */
-	public static Connection getConnection(EnviromentEnum enviroment) throws DAOException {
+	protected static Connection getConnection(EnviromentEnum enviroment) throws DAOException {
 
 		Connection conn = null;
 

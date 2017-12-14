@@ -31,6 +31,14 @@ public class ConnectionManager {
 	
 	private EnviromentEnum enviroment;
 	
+//	public static ConnectionManager getNewInstance() {
+//		return new ConnectionManager();
+//	}
+//	
+//	public static ConnectionManager getNewInstance(EnviromentEnum enviroment) {
+//		return new ConnectionManager(enviroment);
+//	}
+	
 	public void doInTransaction(TransactionCallback callback) throws DAOException, SystemException {
 		Connection connection = null;
 		
@@ -55,6 +63,7 @@ public class ConnectionManager {
 		if (null == enviroment)
 			enviroment = getEnviroment();
 		return ConnectionPool.getInstance(enviroment).getConnection();
+//		return ConnectionFactory.getConnection(enviroment);
 	}
 	
 	private EnviromentEnum getEnviroment() {

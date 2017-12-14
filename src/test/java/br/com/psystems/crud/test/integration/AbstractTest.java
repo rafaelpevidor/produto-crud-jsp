@@ -9,8 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-import br.com.psystems.crud.infra.ConnectionFactory;
 import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.exception.DAOException;
 import br.com.psystems.crud.model.BaseEntity;
 
@@ -33,7 +33,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	}
 
 	private void truncate(String tableName, boolean cascade) throws SQLException, DAOException {
-		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
+		Connection con = new ConnectionManager(EnviromentEnum.TEST).getConnection();
 		
 		PreparedStatement ps = con.prepareStatement("TRUNCATE TABLE "
 				.concat(tableName)
@@ -46,7 +46,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	}
 	
 	protected Integer getTotalRecodsFrom(String table) throws SQLException, DAOException {
-		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
+		Connection con = new ConnectionManager(EnviromentEnum.TEST).getConnection();
 		PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM tb_user");
 		ResultSet rs = ps.executeQuery();
 		rs.next();
@@ -57,7 +57,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	
 	protected Long getLastIdFrom(String table) throws SQLException, DAOException {
 
-		Connection con = ConnectionFactory.getConnection(EnviromentEnum.HML);
+		Connection con = new ConnectionManager(EnviromentEnum.TEST).getConnection();
 		PreparedStatement ps = con.prepareStatement("select nextval(pg_get_serial_sequence('" +table + "', 'id')) as new_id");
 		ResultSet rs = ps.executeQuery();
 		rs.next();

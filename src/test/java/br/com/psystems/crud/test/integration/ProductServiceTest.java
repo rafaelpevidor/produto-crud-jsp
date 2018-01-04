@@ -3,7 +3,11 @@
  */
 package br.com.psystems.crud.test.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -14,10 +18,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
-import br.com.psystems.crud.infra.exception.DAOException;
-import br.com.psystems.crud.infra.exception.SystemException;
+import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.Product;
 import br.com.psystems.crud.model.dao.impl.ProductDAOImpl;
 import br.com.psystems.crud.service.ProductService;
@@ -39,7 +43,7 @@ public class ProductServiceTest extends AbstractTest<Product> {
 	@Before
 	public void setUp() throws Exception {
 		entity = getEntity();
-		service = new ProductServiceImpl(new ProductDAOImpl(new ConnectionManager(EnviromentEnum.TEST)));
+		service = new ProductServiceImpl(new ProductDAOImpl(new ConnectionManager(EnviromentTypeEnum.TEST)));
 	}
 
 	/**

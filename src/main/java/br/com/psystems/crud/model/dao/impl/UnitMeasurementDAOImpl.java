@@ -12,10 +12,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
-import br.com.psystems.crud.infra.exception.DAOException;
-import br.com.psystems.crud.infra.exception.SystemException;
 import br.com.psystems.crud.model.UnitMeasurement;
 import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
 

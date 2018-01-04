@@ -3,7 +3,7 @@
  */
 package br.com.psystems.crud.service;
 
-import br.com.psystems.crud.infra.exception.BusinessException;
+import br.com.psystems.crud.exception.BusinessException;
 import br.com.psystems.crud.model.Product;
 
 /**

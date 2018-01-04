@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
-import br.com.psystems.crud.infra.exception.BusinessException;
-import br.com.psystems.crud.infra.exception.DAOException;
-import br.com.psystems.crud.infra.exception.SystemException;
+import br.com.psystems.crud.exception.BusinessException;
+import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.model.Vendor;
 import br.com.psystems.crud.model.dao.VendorDAO;

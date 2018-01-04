@@ -3,39 +3,31 @@
  */
 package br.com.psystems.crud.web.controller.command.enums;
 
-import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.exception.DAOException;
 import br.com.psystems.crud.model.dao.impl.ProductDAOImpl;
 import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl;
-import br.com.psystems.crud.model.dao.impl.UserDAOImpl;
 import br.com.psystems.crud.model.dao.impl.VendorDAOImpl;
 import br.com.psystems.crud.service.impl.ProductServiceImpl;
 import br.com.psystems.crud.service.impl.UnitMeasurementServiceImpl;
-import br.com.psystems.crud.service.impl.UserServiceImpl;
 import br.com.psystems.crud.service.impl.VendorServiceImpl;
 import br.com.psystems.crud.web.controller.Controllable;
 import br.com.psystems.crud.web.controller.command.AddProductCommand;
 import br.com.psystems.crud.web.controller.command.AddUnitMeasurementCommand;
-import br.com.psystems.crud.web.controller.command.AddUserCommand;
 import br.com.psystems.crud.web.controller.command.AddVendorCommand;
 import br.com.psystems.crud.web.controller.command.DeleteProductCommand;
 import br.com.psystems.crud.web.controller.command.DeleteUnitMeasutementCommand;
-import br.com.psystems.crud.web.controller.command.DeleteUserCommand;
 import br.com.psystems.crud.web.controller.command.DeleteVendorCommand;
 import br.com.psystems.crud.web.controller.command.FindProductCommand;
 import br.com.psystems.crud.web.controller.command.FindUnitMeasurementCommand;
-import br.com.psystems.crud.web.controller.command.FindUserCommand;
 import br.com.psystems.crud.web.controller.command.FindVendorCommand;
 import br.com.psystems.crud.web.controller.command.ListProductCommand;
 import br.com.psystems.crud.web.controller.command.ListUnitMeasurementCommand;
-import br.com.psystems.crud.web.controller.command.ListUserCommand;
 import br.com.psystems.crud.web.controller.command.ListVendorCommand;
 import br.com.psystems.crud.web.controller.command.SearchProductCommand;
 import br.com.psystems.crud.web.controller.command.SearchUnitMeasurementCommand;
-import br.com.psystems.crud.web.controller.command.SearchUserCommand;
 import br.com.psystems.crud.web.controller.command.SearchVendorCommand;
 import br.com.psystems.crud.web.controller.command.UpdateProductCommand;
 import br.com.psystems.crud.web.controller.command.UpdateUnitMeasurementCommand;
-import br.com.psystems.crud.web.controller.command.UpdateUserCommand;
 import br.com.psystems.crud.web.controller.command.UpdateVendorCommand;
 
 /**
@@ -115,43 +107,6 @@ public enum CommandMapEnum {
 		@Override
 		public Controllable getInstance() throws DAOException {
 			return new ListProductCommand(new ProductServiceImpl(new ProductDAOImpl()));
-		}
-	},
-	
-	ADD_USER("13","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new AddUserCommand(new UserServiceImpl(new UserDAOImpl()));
-		}
-	},
-	RECOVER_USER("14","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new FindUserCommand(new UserServiceImpl(new UserDAOImpl()));
-		}
-	},
-	UPDATE_USER("15","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new UpdateUserCommand(new UserServiceImpl(new UserDAOImpl()));
-		}
-	},
-	DELETE_USER("16","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new DeleteUserCommand(new UserServiceImpl(new UserDAOImpl()));
-		}
-	},
-	SEARCH_USER("17","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new SearchUserCommand(new UserServiceImpl(new UserDAOImpl()));
-		}
-	},
-	LIST_USER("18","") {
-		@Override
-		public Controllable getInstance() throws DAOException {
-			return new ListUserCommand(new UserServiceImpl(new UserDAOImpl()));
 		}
 	},
 	

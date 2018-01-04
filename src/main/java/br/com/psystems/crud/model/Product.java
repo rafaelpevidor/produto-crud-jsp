@@ -21,13 +21,12 @@ public class Product implements BaseEntity {
 	private static final long serialVersionUID = 6048749574413769644L;
 
 	private Long id;
-//	private Long vendorId;
 	private Long unitMeasurementId;
 	private String name;
 	private String description;
 	private BigDecimal mininumQuantity;
 	private Boolean ownManufacturing = Boolean.FALSE;
-//	private Vendor vendor;
+	private BigDecimal price;
 	private UnitMeasurement unitMeasurement;
 	private List<String> tags;
 	private List<Long> references;
@@ -106,6 +105,14 @@ public class Product implements BaseEntity {
 			setUnitMeasurementId(unitMeasurement.getId());
 	}
 	
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -115,8 +122,10 @@ public class Product implements BaseEntity {
 		result = prime * result + ((mininumQuantity == null) ? 0 : mininumQuantity.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((ownManufacturing == null) ? 0 : ownManufacturing.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((references == null) ? 0 : references.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		result = prime * result + ((unitMeasurement == null) ? 0 : unitMeasurement.hashCode());
 		result = prime * result + ((unitMeasurementId == null) ? 0 : unitMeasurementId.hashCode());
 		return result;
 	}
@@ -155,6 +164,11 @@ public class Product implements BaseEntity {
 				return false;
 		} else if (!ownManufacturing.equals(other.ownManufacturing))
 			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
 		if (references == null) {
 			if (other.references != null)
 				return false;
@@ -165,6 +179,11 @@ public class Product implements BaseEntity {
 				return false;
 		} else if (!tags.equals(other.tags))
 			return false;
+		if (unitMeasurement == null) {
+			if (other.unitMeasurement != null)
+				return false;
+		} else if (!unitMeasurement.equals(other.unitMeasurement))
+			return false;
 		if (unitMeasurementId == null) {
 			if (other.unitMeasurementId != null)
 				return false;
@@ -172,10 +191,9 @@ public class Product implements BaseEntity {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 }

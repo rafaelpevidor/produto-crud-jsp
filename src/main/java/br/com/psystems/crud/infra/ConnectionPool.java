@@ -6,12 +6,12 @@ package br.com.psystems.crud.infra;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
-import br.com.psystems.crud.infra.exception.DAOException;
+import br.com.psystems.crud.exception.DAOException;
 
 /**
  * @author developer
@@ -23,13 +23,14 @@ public class ConnectionPool {
 	
 	private static Logger logger = Logger.getLogger(ConnectionPool.class);
 	
-	protected static ConnectionPool getInstance(EnviromentEnum enviromentObj) {
+	protected static ConnectionPool getInstance(EnviromentTypeEnum enviroment) {
 		if (instance == null) {
 			instance = new ConnectionPool();
-			enviroment = enviromentObj;
-			maxConnections = enviroment.getMaxConnections();
+			loadConnectionProperties(enviroment);
 			freeConnections = new ArrayBlockingQueue<Connection>(maxConnections, true);
 			connectionsInUse = new HashMap<>();
+		} else if (!ConnectionPool.enviroment.equals(enviroment)) {
+			loadConnectionProperties(enviroment);
 		}
 		return instance;
 	}
@@ -38,7 +39,24 @@ public class ConnectionPool {
 	private static Integer maxConnections;
 	private static ArrayBlockingQueue<Connection> freeConnections;
 	private static HashMap<String, Connection> connectionsInUse;
-	private static EnviromentEnum enviroment;
+	private static EnviromentTypeEnum enviroment;
+	private static ResourceBundle connectionProperties;
+	
+	protected static void loadConnectionProperties(EnviromentTypeEnum enviroment) {
+		ConnectionPool.connectionProperties = ResourceBundle.getBundle("META-INF/enviroment.properties");
+		Integer amountOfMaxConnections = Integer.parseInt(connectionProperties.getString(enviroment.getMaxConnections()));
+		Integer maxConnections = null;
+		if (
+				(null == ConnectionPool.enviroment)||
+				(
+						(null != (maxConnections = Integer.parseInt(ConnectionPool.enviroment.getMaxConnections())) && 
+						amountOfMaxConnections > maxConnections)
+				)
+		) {
+			ConnectionPool.maxConnections = amountOfMaxConnections;
+		}
+		ConnectionPool.enviroment = enviroment;
+	}
 
 	protected Connection getConnection() throws DAOException {
 		Connection con = null;
@@ -47,7 +65,14 @@ public class ConnectionPool {
 			if (connectionsInUse.size() < maxConnections) {
 				con = freeConnections.poll();
 				if(con == null)
-					con = ConnectionFactory.getConnection(enviroment);
+					con = ConnectionFactory.getConnection(
+							connectionProperties.getString(enviroment.getDriver()), 
+							connectionProperties.getString(enviroment.getUrl()),
+							connectionProperties.getString(enviroment.getHost()),
+							connectionProperties.getString(enviroment.getPort()),
+							connectionProperties.getString(enviroment.getDatabase()), 
+							connectionProperties.getString(enviroment.getUser()), 
+							connectionProperties.getString(enviroment.getPassword()));
 				else if (con.isClosed()) {
 					this.getConnection();
 				}

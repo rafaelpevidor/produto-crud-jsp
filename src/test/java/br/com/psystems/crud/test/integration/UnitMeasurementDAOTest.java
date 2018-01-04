@@ -15,10 +15,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
-import br.com.psystems.crud.infra.exception.DAOException;
-import br.com.psystems.crud.infra.exception.SystemException;
+import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.UnitMeasurement;
 import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
 import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl;
@@ -38,7 +38,7 @@ public class UnitMeasurementDAOTest extends AbstractTest<UnitMeasurement> {
 	@Before
 	public void setUp() throws Exception {
 		entity = getEntity();
-		dao = new UnitMeasurementDAOImpl(new ConnectionManager(EnviromentEnum.TEST));
+		dao = new UnitMeasurementDAOImpl(new ConnectionManager(EnviromentTypeEnum.TEST));
 	}
 
 	/**

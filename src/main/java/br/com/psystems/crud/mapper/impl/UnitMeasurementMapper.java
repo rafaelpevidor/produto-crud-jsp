@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import br.com.psystems.crud.infra.exception.MapperException;
+import br.com.psystems.crud.exception.MapperException;
 import br.com.psystems.crud.infra.util.Constants;
 import br.com.psystems.crud.mapper.BaseMapper;
 import br.com.psystems.crud.model.UnitMeasurement;

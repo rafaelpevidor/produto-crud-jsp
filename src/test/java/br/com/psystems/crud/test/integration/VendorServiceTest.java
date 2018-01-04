@@ -15,11 +15,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.psystems.crud.infra.ConnectionFactory.EnviromentEnum;
+import br.com.psystems.crud.exception.BusinessException;
+import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
-import br.com.psystems.crud.infra.exception.BusinessException;
-import br.com.psystems.crud.infra.exception.DAOException;
-import br.com.psystems.crud.infra.exception.SystemException;
+import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.Vendor;
 import br.com.psystems.crud.model.dao.impl.VendorDAOImpl;
 import br.com.psystems.crud.service.VendorService;
@@ -41,7 +41,7 @@ public class VendorServiceTest extends AbstractTest<Vendor> {
 	@Before
 	public void setUp() throws Exception {
 		entity = getEntity();
-		service = new VendorServiceImpl(new VendorDAOImpl(new ConnectionManager(EnviromentEnum.DEV)));
+		service = new VendorServiceImpl(new VendorDAOImpl(new ConnectionManager(EnviromentTypeEnum.DEV)));
 	}
 
 	/**

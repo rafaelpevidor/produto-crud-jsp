@@ -3,15 +3,17 @@
  */
 package br.com.psystems.crud.infra;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.log4j.Logger;
 
 import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 
 /**
  * @author developer
@@ -23,58 +25,54 @@ public class ConnectionPool {
 	
 	private static Logger logger = Logger.getLogger(ConnectionPool.class);
 	
-	protected static ConnectionPool getInstance(EnviromentTypeEnum enviroment) {
-		if (instance == null) {
+	protected static ConnectionPool getInstance() throws SystemException {
+		if (instance == null)
 			instance = new ConnectionPool();
-			loadConnectionProperties(enviroment);
-			freeConnections = new ArrayBlockingQueue<Connection>(maxConnections, true);
-			connectionsInUse = new HashMap<>();
-		} else if (!ConnectionPool.enviroment.equals(enviroment)) {
-			loadConnectionProperties(enviroment);
-		}
 		return instance;
 	}
 
 	private static ConnectionPool instance;
-	private static Integer maxConnections;
-	private static ArrayBlockingQueue<Connection> freeConnections;
-	private static HashMap<String, Connection> connectionsInUse;
-	private static EnviromentTypeEnum enviroment;
-	private static ResourceBundle connectionProperties;
+	private Integer maxConnections;
+	private ArrayBlockingQueue<Connection> freeConnections;
+	private HashMap<String, Connection> connectionsInUse = new HashMap<>();
+	private EnviromentTypeEnum enviroment;
+	private Properties connectionProperties = new Properties();
 	
-	protected static void loadConnectionProperties(EnviromentTypeEnum enviroment) {
-		ConnectionPool.connectionProperties = ResourceBundle.getBundle("META-INF/enviroment.properties");
-		Integer amountOfMaxConnections = Integer.parseInt(connectionProperties.getString(enviroment.getMaxConnections()));
-		Integer maxConnections = null;
-		if (
-				(null == ConnectionPool.enviroment)||
-				(
-						(null != (maxConnections = Integer.parseInt(ConnectionPool.enviroment.getMaxConnections())) && 
-						amountOfMaxConnections > maxConnections)
-				)
-		) {
-			ConnectionPool.maxConnections = amountOfMaxConnections;
+	protected void loadConnectionProperties(EnviromentTypeEnum enviroment) throws SystemException {
+		try {
+			InputStream in = getClass().getResourceAsStream("/META-INF/enviroment.properties");
+			this.connectionProperties.load(in);
+	        in.close();	
+			Integer maxConnections = Integer.parseInt(connectionProperties.getProperty(enviroment.getMaxConnections()));
+			this.enviroment = enviroment;
+			this.maxConnections = maxConnections;
+			this.freeConnections = new ArrayBlockingQueue<Connection>(maxConnections, true);
+		} catch (Exception e) {
+			throw new SystemException("Erro ao carregar as configurações de banco de dados.", e);
 		}
-		ConnectionPool.enviroment = enviroment;
 	}
 
-	protected Connection getConnection() throws DAOException {
+	protected Connection getConnection(EnviromentTypeEnum enviroment) throws DAOException, SystemException {
 		Connection con = null;
-
+		
+		if (null == this.enviroment) {
+			loadConnectionProperties(enviroment);
+		}
+		
 		try {
 			if (connectionsInUse.size() < maxConnections) {
 				con = freeConnections.poll();
 				if(con == null)
 					con = ConnectionFactory.getConnection(
-							connectionProperties.getString(enviroment.getDriver()), 
-							connectionProperties.getString(enviroment.getUrl()),
-							connectionProperties.getString(enviroment.getHost()),
-							connectionProperties.getString(enviroment.getPort()),
-							connectionProperties.getString(enviroment.getDatabase()), 
-							connectionProperties.getString(enviroment.getUser()), 
-							connectionProperties.getString(enviroment.getPassword()));
+							connectionProperties.getProperty(enviroment.getDriver()), 
+							connectionProperties.getProperty(enviroment.getUrl()),
+							connectionProperties.getProperty(enviroment.getHost()),
+							connectionProperties.getProperty(enviroment.getPort()),
+							connectionProperties.getProperty(enviroment.getDatabase()), 
+							connectionProperties.getProperty(enviroment.getUser()), 
+							connectionProperties.getProperty(enviroment.getPassword()));
 				else if (con.isClosed()) {
-					this.getConnection();
+					this.getConnection(enviroment);
 				}
 				connectionsInUse.put(con.toString(), con);
 			}

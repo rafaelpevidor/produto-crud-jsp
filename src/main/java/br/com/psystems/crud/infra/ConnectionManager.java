@@ -50,10 +50,10 @@ public class ConnectionManager {
 		}
 	}
 	
-	public Connection getConnection() throws DAOException {
+	public Connection getConnection() throws DAOException, SystemException {
 		if (null == enviroment)
 			enviroment = getEnviroment();
-		return ConnectionPool.getInstance(enviroment).getConnection();
+		return ConnectionPool.getInstance().getConnection(enviroment);
 	}
 	
 	private EnviromentTypeEnum getEnviroment() {
@@ -67,8 +67,8 @@ public class ConnectionManager {
 		return null;
 	}
 
-	public void close(Connection connection) throws DAOException {
-		ConnectionPool.getInstance(enviroment).releaseConnection(connection);
+	public void close(Connection connection) throws DAOException, SystemException {
+		ConnectionPool.getInstance().releaseConnection(connection);
 	}
 	
 }

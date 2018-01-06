@@ -18,6 +18,11 @@ public class UnitMeasurement implements BaseEntity {
 	
 	public UnitMeasurement() {}
 	
+	public UnitMeasurement(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
 	public UnitMeasurement(String name) {
 		this.name = name;
 	}

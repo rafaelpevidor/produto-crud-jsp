@@ -19,7 +19,7 @@ public class ConnectionFactory {
 	 * @return {@link Connection}
 	 * Retorna uma conexão com o banco de dados a partir do esquema passado como argumento
 	 * */
-	protected static Connection getConnection(String driver, String host, String port, String url, String database, String user, String password) throws DAOException {
+	protected static Connection getConnection(String driver, String url, String host, String port, String database, String user, String password) throws DAOException {
 
 		Connection conn = null;
 

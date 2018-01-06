@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 import br.com.psystems.crud.exception.DAOException;
+import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.BaseEntity;
@@ -24,15 +25,15 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	
 	protected abstract T getEntity();
 	
-	public void truncate(String tableName) throws SQLException, DAOException {
+	public void truncate(String tableName) throws SQLException, DAOException, SystemException {
 		truncate(tableName, false);
 	}
 	
-	public void truncateCascade(String tableName) throws SQLException, DAOException {
+	public void truncateCascade(String tableName) throws SQLException, DAOException, SystemException {
 		truncate(tableName, true);
 	}
 
-	private void truncate(String tableName, boolean cascade) throws SQLException, DAOException {
+	private void truncate(String tableName, boolean cascade) throws SQLException, DAOException, SystemException {
 		Connection con = new ConnectionManager(EnviromentTypeEnum.TEST).getConnection();
 		
 		PreparedStatement ps = con.prepareStatement("TRUNCATE TABLE "
@@ -45,7 +46,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 		con.close();
 	}
 	
-	protected Integer getTotalRecodsFrom(String table) throws SQLException, DAOException {
+	protected Integer getTotalRecodsFrom(String table) throws SQLException, DAOException, SystemException {
 		Connection con = new ConnectionManager(EnviromentTypeEnum.TEST).getConnection();
 		PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM tb_user");
 		ResultSet rs = ps.executeQuery();
@@ -55,7 +56,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 		return rs.getInt(1);
 	}
 	
-	protected Long getLastIdFrom(String table) throws SQLException, DAOException {
+	protected Long getLastIdFrom(String table) throws SQLException, DAOException, SystemException {
 
 		Connection con = new ConnectionManager(EnviromentTypeEnum.TEST).getConnection();
 		PreparedStatement ps = con.prepareStatement("select nextval(pg_get_serial_sequence('" +table + "', 'id')) as new_id");

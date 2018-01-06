@@ -8,10 +8,10 @@ package br.com.psystems.crud.infra;
  *
  */
 public enum EnviromentTypeEnum {
-	PROD("prod.driver","prod.database","prod.host","prod.port","prod.url","prod.user","prod.password","prod.maxconnections"),
-	HML("hml.driver","hml.database","hml.host","hml.port","html.url","html.user","html.password","html.maxconnections"),
-	TEST("test.driver","test.database","test.host","test.port","test.url","test.user","test.password","test.maxconnections"),
-	DEV("dev.driver","dev.database","dev.host","dev.port","dev.url","dev.user","dev.password","dev.maxconnections")
+	PROD("prod.db.driver","proprod.db.database","prod.db.host","prod.db.port","prod.db.url","prod.db.user","prod.db.password","prod.maxconnections"),
+	HML("hml.db.db.driver","hml.db.database","hml.db.host","hml.db.port","hml.db.url","hml.db.user","hml.db.password","hml.db.maxconnections"),
+	TEST("test.db.driver","test.db.database","test.db.host","test.db.port","test.db.url","test.db.user","test.db.password","test.db.maxconnections"),
+	DEV("dev.db.driver","dev.db.database","dev.db.host","dev.db.port","dev.db.url","dev.db.user","dev.db.password","dev.db.maxconnections")
 	;
 
 	private EnviromentTypeEnum(String driver, String database, String host, String port, String url, String user, String password, String maxConnections) {

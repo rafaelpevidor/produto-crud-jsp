@@ -38,7 +38,6 @@ public class UnitMeasurementDAOImpl extends AbstractDAO implements UnitMeasureme
 		super(connectionManager);
 	}
 
-	public static final String TABLE_NAME = "tb_unit_measurement";
 	protected static final String SQL_FIND_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name) VALUES (?)";
 	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ? WHERE id = ?";
@@ -59,7 +58,7 @@ public class UnitMeasurementDAOImpl extends AbstractDAO implements UnitMeasureme
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
 				ps.setString(1, entity.getName());
 
-				ps.executeUpdate();
+				ps.execute();
 
 				logger.info("Unidade de Medida inserida com sucesso!\n ".concat(entity.toString()));
 			}

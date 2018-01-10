@@ -23,7 +23,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	
 	protected static final long ALIAS = Calendar.getInstance().getTimeInMillis();
 	
-	protected abstract T getEntity();
+	protected abstract T getEntity() throws DAOException, SystemException, SQLException;
 	
 	public void truncate(String tableName) throws SQLException, DAOException, SystemException {
 		truncate(tableName, false);
@@ -34,7 +34,8 @@ public abstract class AbstractTest<T extends BaseEntity> {
 	}
 
 	private void truncate(String tableName, boolean cascade) throws SQLException, DAOException, SystemException {
-		Connection con = new ConnectionManager(EnviromentTypeEnum.TEST).getConnection();
+		ConnectionManager connectionManager = new ConnectionManager(EnviromentTypeEnum.TEST);
+		Connection con = connectionManager.getConnection();
 		
 		PreparedStatement ps = con.prepareStatement("TRUNCATE TABLE "
 				.concat(tableName)
@@ -42,8 +43,7 @@ public abstract class AbstractTest<T extends BaseEntity> {
 		ps.execute();
 		
 		con.commit();
-		ps.close();
-		con.close();
+		connectionManager.close(con);
 	}
 	
 	protected Integer getTotalRecodsFrom(String table) throws SQLException, DAOException, SystemException {

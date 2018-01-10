@@ -3,8 +3,8 @@
  */
 package br.com.psystems.crud.infra;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -20,7 +20,9 @@ import br.com.psystems.crud.exception.SystemException;
  */
 public class ConnectionManager {
 	
-	public ConnectionManager() {}
+	public ConnectionManager() {
+		this.enviroment = getEnviroment();
+	}
 	
 	public ConnectionManager(EnviromentTypeEnum enviroment) {
 		this.enviroment = enviroment;
@@ -51,16 +53,16 @@ public class ConnectionManager {
 	}
 	
 	public Connection getConnection() throws DAOException, SystemException {
-		if (null == enviroment)
-			enviroment = getEnviroment();
 		return ConnectionPool.getInstance().getConnection(enviroment);
 	}
 	
 	private EnviromentTypeEnum getEnviroment() {
 		Properties propertiesFile = new Properties();
 		try {
-			propertiesFile.load(new FileInputStream("/opt/product-crud-jsp/enviroment.properties"));//FIXME rever o local do arquivo
-			return EnviromentTypeEnum.valueOf(propertiesFile.getProperty("enviroment.type"));
+			InputStream in = getClass().getResourceAsStream("/META-INF/enviroment.properties");
+			propertiesFile.load(in);
+			in.close();
+			return EnviromentTypeEnum.valueOf(propertiesFile.getProperty("enviroment.name"));
 		} catch (IOException e) {
 			logger.error("Arquivo de configuração não encontrado.");
 		}

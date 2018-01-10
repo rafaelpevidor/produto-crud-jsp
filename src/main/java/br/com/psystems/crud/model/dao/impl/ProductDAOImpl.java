@@ -19,6 +19,7 @@ import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.TransactionCallback;
 import br.com.psystems.crud.model.Product;
+import br.com.psystems.crud.model.UnitMeasurement;
 import br.com.psystems.crud.model.dao.ProductDAO;
 
 /**
@@ -40,9 +41,8 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 		super(connectionManager);
 	}
 
-	public static final String TABLE_NAME = "tb_product";
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, mininum_quantity, tags, reference, own_manufacturing, description) VALUES (?,?,?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, mininum_quantity = ?, tags = ?, reference = ?, own_manufacturing = ?, description = ? WHERE id = ?";
+	private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (unit_id, name, mininum_quantity, tags, reference, own_manufacturing, description) VALUES (?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET unit_id = ?, name = ?, mininum_quantity = ?, tags = ?, reference = ?, own_manufacturing = ?, description = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 	private static final String SQL_FIND_ALL = "SELECT * FROM " + TABLE_NAME + "";
 	private static final String SQL_FIND_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE name like ?";
@@ -59,15 +59,16 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 
 				PreparedStatement ps = getPreparedStatement(connection, SQL_INSERT);
-				ps.setString(1, entity.getName());
-				ps.setBigDecimal(2, entity.getMininumQuantity());
-				ps.setArray(3, getTagsAsSQLArray(entity, connection));
-				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
-				ps.setBoolean(5, entity.getOwnManufacturing());
-				ps.setString(6, entity.getDescription());
+				ps.setLong(1, entity.getUnitMeasurementId());
+				ps.setString(2, entity.getName());
+				ps.setBigDecimal(3, entity.getMininumQuantity());
+				ps.setArray(4, getTagsAsSQLArray(entity, connection));
+				ps.setArray(5, getReferencesAsSQLArray(entity, connection));
+				ps.setBoolean(6, entity.getOwnManufacturing());
+				ps.setString(7, entity.getDescription());
 
 				ps.execute();
-
+				ps.close();
 				logger.info("Produto inserido com sucesso!\n ".concat(entity.toString()));
 			}
 
@@ -83,16 +84,17 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 			public void execute(Connection connection) throws SQLException, DAOException, SystemException {
 
 				PreparedStatement ps = getPreparedStatement(connection, SQL_UPDATE);
-				
-				ps.setString(1, entity.getName());
-				ps.setBigDecimal(2, entity.getMininumQuantity());
-				ps.setArray(3, getTagsAsSQLArray(entity, connection));
-				ps.setArray(4, getReferencesAsSQLArray(entity, connection));
-				ps.setBoolean(5, entity.getOwnManufacturing());
-				ps.setString(6, entity.getDescription());
-				ps.setLong(7, entity.getId());
+				ps.setLong(1, entity.getUnitMeasurementId());
+				ps.setString(2, entity.getName());
+				ps.setBigDecimal(3, entity.getMininumQuantity());
+				ps.setArray(4, getTagsAsSQLArray(entity, connection));
+				ps.setArray(5, getReferencesAsSQLArray(entity, connection));
+				ps.setBoolean(6, entity.getOwnManufacturing());
+				ps.setString(7, entity.getDescription());
+				ps.setLong(8, entity.getId());
 
 				int qtdLinhas = ps.executeUpdate();
+				ps.close();
 
 				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro alterado.");
@@ -116,6 +118,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 				ps.setLong(1, id);
 
 				int qtdLinhas = ps.executeUpdate();
+				ps.close();
 
 				if (0 >= qtdLinhas) {
 					logger.info("Nenhum registro apagado.");
@@ -131,62 +134,79 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 	public Product findById(Long id) throws DAOException, SystemException {
 
 		Connection con = null;
-
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Product entity = null;
+		
 		try {
 			con = connectionManager.getConnection();
 			
-			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_ID);
+			ps = getPreparedStatement(con, SQL_FIND_BY_ID);
 			ps.setLong(1, id);
-
-			return getEntity(ps.executeQuery());
+			rs = ps.executeQuery();
+			
+			entity = getEntity(rs);
+			
+			rs.close();
+			ps.close();
+			
 		} catch (Exception e) {
 			set(e);
-			return null;
 		} finally {
 			connectionManager.close(con);
 		}
+		
+		return entity;
 	}
 
 	@Override
 	public List<Product> findByName(String name) throws DAOException, SystemException {
 
 		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Product> entityList = new ArrayList<>();
 		
 		try {
 			con = connectionManager.getConnection();
 
-			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_BY_NAME);
+			ps = getPreparedStatement(con, SQL_FIND_BY_NAME);
 			ps.setString(1, "%"+name+"%");
+			rs = ps.executeQuery();
 			
-			return getEntityList(ps.executeQuery());
+			entityList = getEntityList(rs);
 			
 		} catch (Exception e) {
 			set(e);
-			return null;
 		} finally {
 			connectionManager.close(con);
 		}
 	
+		return entityList;
 	}
 
 	@Override
 	public List<Product> getAll() throws DAOException, SystemException {
 
 		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Product> entityList = new ArrayList<>();
 		
 		try {
 			con = connectionManager.getConnection();
 			
-			PreparedStatement ps = getPreparedStatement(con, SQL_FIND_ALL);
+			ps = getPreparedStatement(con, SQL_FIND_ALL);
+			rs = ps.executeQuery();
 			
-			return getEntityList(ps.executeQuery());
+			entityList = getEntityList(rs);
 			
 		} catch (Exception e) {
 			set(e);
-			return null;
 		} finally {
 			connectionManager.close(con);
 		}
+		return entityList;
 	}
 
 	@Override
@@ -223,7 +243,9 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 		product.setTags(getTags(rs));
 		product.setReferences(getReferences(rs));
 		product.setOwnManufacturing(rs.getBoolean("own_manufacturing"));
-		
+		Long unitId = rs.getLong("unit_id");
+		product.setUnitMeasurement(new UnitMeasurement(unitId, null));
+		product.setUnitMeasurementId(unitId);
 		return product;
 	}
 	

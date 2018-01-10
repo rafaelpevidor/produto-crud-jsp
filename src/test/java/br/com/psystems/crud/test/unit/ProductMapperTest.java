@@ -58,6 +58,7 @@ public class ProductMapperTest extends AbstractTest<Product> {
 		assertNotNull(mapped.getId());
 		assertNotNull(mapped.getName());
 		assertNotNull(mapped.getDescription());
+		assertNotNull(mapped.getMininumQuantity());
 		
 		assertEquals(mapped.getId(), entity.getId());
 		assertEquals(mapped.getName(), entity.getName());
@@ -72,6 +73,9 @@ public class ProductMapperTest extends AbstractTest<Product> {
 				.setTags(Arrays.asList("comida", "massa", "pasta"))
 				.setReferences(Arrays.asList(1L, 2L, 3L))
 				.setMininumQuantity(new BigDecimal("42.8"))
+				.setPrice(new BigDecimal("50.0"))
+				.setOwnManufacturing(true)
+				.setUnitMeasurement(null)
 				.build();
 	}
 

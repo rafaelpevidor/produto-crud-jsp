@@ -4,6 +4,7 @@
 package br.com.psystems.crud.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,12 +25,12 @@ public class Product implements BaseEntity {
 	private Long unitMeasurementId;
 	private String name;
 	private String description;
-	private BigDecimal mininumQuantity;
+	private BigDecimal mininumQuantity = BigDecimal.ZERO;
 	private Boolean ownManufacturing = Boolean.FALSE;
 	private BigDecimal price;
 	private UnitMeasurement unitMeasurement;
-	private List<String> tags;
-	private List<Long> references;
+	private List<String> tags = new ArrayList<>();
+	private List<Long> references = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -101,7 +102,7 @@ public class Product implements BaseEntity {
 
 	public void setUnitMeasurement(UnitMeasurement unitMeasurement) {
 		this.unitMeasurement = unitMeasurement;
-		if (null != unitMeasurement && null != unitMeasurement.getId())
+		if (null != this.unitMeasurement && null != this.unitMeasurement.getId())
 			setUnitMeasurementId(unitMeasurement.getId());
 	}
 	

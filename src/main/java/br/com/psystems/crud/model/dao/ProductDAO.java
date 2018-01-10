@@ -11,4 +11,5 @@ import br.com.psystems.crud.model.Product;
  */
 public interface ProductDAO extends CrudBaseDAO<Product> {
 
+	public static final String TABLE_NAME = "tb_product";
 }

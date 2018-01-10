@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.psystems.crud.model.Product;
+import br.com.psystems.crud.model.UnitMeasurement;
 
 /**
  * @author developer
@@ -42,6 +43,21 @@ public class ProductBuilder {
 	
 	public ProductBuilder setMininumQuantity(BigDecimal mininumQuantity) {
 		product.setMininumQuantity(mininumQuantity);
+		return this;
+	}
+	
+	public ProductBuilder setPrice(BigDecimal price) {
+		product.setPrice(price);
+		return this;
+	}
+	
+	public ProductBuilder setOwnManufacturing(Boolean ownManufacturing) {
+		product.setOwnManufacturing(ownManufacturing);
+		return this;
+	}
+	
+	public ProductBuilder setUnitMeasurement(UnitMeasurement unitMeasurement) {
+		product.setUnitMeasurement(unitMeasurement);
 		return this;
 	}
 	

@@ -23,6 +23,7 @@ import br.com.psystems.crud.exception.SystemException;
 import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.Product;
+import br.com.psystems.crud.model.UnitMeasurement;
 import br.com.psystems.crud.model.dao.impl.ProductDAOImpl;
 import br.com.psystems.crud.service.ProductService;
 import br.com.psystems.crud.service.impl.ProductServiceImpl;
@@ -223,7 +224,14 @@ public class ProductServiceTest extends AbstractTest<Product> {
 				.setTags(Arrays.asList("comida", "massa", "pasta"))
 				.setReferences(Arrays.asList(1L, 2L, 3L))
 				.setMininumQuantity(new BigDecimal("42.8"))
+				.setPrice(new BigDecimal("50.0"))
+				.setOwnManufacturing(true)
+				.setUnitMeasurement(getUnit())
 				.build();
+	}
+	
+	private UnitMeasurement getUnit() {
+		return new UnitMeasurement(1L, "Unit Name " + ALIAS);
 	}
 
 }

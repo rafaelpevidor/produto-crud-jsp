@@ -24,9 +24,14 @@ import br.com.psystems.crud.infra.ConnectionManager;
 import br.com.psystems.crud.infra.EnviromentTypeEnum;
 import br.com.psystems.crud.model.Product;
 import br.com.psystems.crud.model.UnitMeasurement;
+import br.com.psystems.crud.model.dao.ProductDAO;
+import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
 import br.com.psystems.crud.model.dao.impl.ProductDAOImpl;
+import br.com.psystems.crud.model.dao.impl.UnitMeasurementDAOImpl;
 import br.com.psystems.crud.service.ProductService;
+import br.com.psystems.crud.service.UnitMeasurementService;
 import br.com.psystems.crud.service.impl.ProductServiceImpl;
+import br.com.psystems.crud.service.impl.UnitMeasurementServiceImpl;
 import br.com.psystems.crud.test.builder.ProductBuilder;
 
 /**
@@ -37,14 +42,17 @@ public class ProductServiceTest extends AbstractTest<Product> {
 
 	private Product entity;
 	private ProductService service;
+	private UnitMeasurement unitMeasurement;
+	private UnitMeasurementService unitMeasurementService;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		entity = getEntity();
+		unitMeasurementService = new UnitMeasurementServiceImpl(new UnitMeasurementDAOImpl(new ConnectionManager(EnviromentTypeEnum.TEST)));
 		service = new ProductServiceImpl(new ProductDAOImpl(new ConnectionManager(EnviromentTypeEnum.TEST)));
+		entity = getEntity();
 	}
 
 	/**
@@ -52,7 +60,8 @@ public class ProductServiceTest extends AbstractTest<Product> {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		truncateCascade(ProductDAOImpl.TABLE_NAME);
+		truncateCascade(ProductDAO.TABLE_NAME);
+		truncateCascade(UnitMeasurementDAO.TABLE_NAME);
 	}
 
 	/**
@@ -66,7 +75,7 @@ public class ProductServiceTest extends AbstractTest<Product> {
 		
 		service.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = service.findById(id);
@@ -87,7 +96,7 @@ public class ProductServiceTest extends AbstractTest<Product> {
 		
 		service.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = service.findById(id);
@@ -116,7 +125,7 @@ public class ProductServiceTest extends AbstractTest<Product> {
 		
 		service.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = service.findById(id);
@@ -143,7 +152,7 @@ public class ProductServiceTest extends AbstractTest<Product> {
 
 		service.save(entity);
 		
-		Long id = getLastIdFrom(ProductDAOImpl.TABLE_NAME);
+		Long id = getLastIdFrom(ProductDAO.TABLE_NAME);
 		
 		entity = null;
 		entity = service.findById(id);
@@ -217,12 +226,12 @@ public class ProductServiceTest extends AbstractTest<Product> {
 	}
 
 	@Override
-	protected Product getEntity() {
+	protected Product getEntity() throws DAOException, SystemException, SQLException {
 		return new ProductBuilder()
 				.setDescription("Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI.")
 				.setName("Product Name " + ALIAS)
-				.setTags(Arrays.asList("comida", "massa", "pasta"))
-				.setReferences(Arrays.asList(1L, 2L, 3L))
+				.setTagsList(Arrays.asList("comida", "massa", "pasta"))
+				.setReferencesList(Arrays.asList(1L, 2L, 3L))
 				.setMininumQuantity(new BigDecimal("42.8"))
 				.setPrice(new BigDecimal("50.0"))
 				.setOwnManufacturing(true)
@@ -230,8 +239,10 @@ public class ProductServiceTest extends AbstractTest<Product> {
 				.build();
 	}
 	
-	private UnitMeasurement getUnit() {
-		return new UnitMeasurement(1L, "Unit Name " + ALIAS);
+	private UnitMeasurement getUnit() throws DAOException, SystemException, SQLException {
+		unitMeasurementService.save(new UnitMeasurement("Unit Name " + ALIAS));
+		unitMeasurement = unitMeasurementService.findById(getLastIdFrom(UnitMeasurementDAO.TABLE_NAME));
+		return unitMeasurement;
 	}
 
 }

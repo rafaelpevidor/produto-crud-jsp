@@ -60,7 +60,7 @@ public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
 				ps.setString(1, entity.getName());
 				ps.setString(2, entity.getDescription());
 
-				ps.executeUpdate();
+				ps.execute();
 
 				logger.info("Fornecedor inserido com sucesso!\n ".concat(entity.toString()));
 			}

@@ -4,8 +4,8 @@
 package br.com.psystems.crud.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -29,8 +29,8 @@ public class Product implements BaseEntity {
 	private Boolean ownManufacturing = Boolean.FALSE;
 	private BigDecimal price;
 	private UnitMeasurement unitMeasurement;
-	private List<String> tags = new ArrayList<>();
-	private List<Long> references = new ArrayList<>();
+	private Set<String> tags = new HashSet<>();
+	private Set<Long> references = new HashSet<>();
 	
 	public Long getId() {
 		return id;
@@ -56,19 +56,19 @@ public class Product implements BaseEntity {
 		this.description = description;
 	}
 	
-	public List<String> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<String> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 
-	public List<Long> getReferences() {
+	public Set<Long> getReferences() {
 		return references;
 	}
 
-	public void setReferences(List<Long> references) {
+	public void setReferences(Set<Long> references) {
 		this.references = references;
 	}
 	

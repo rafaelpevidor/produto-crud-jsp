@@ -3,6 +3,10 @@
  */
 package br.com.psystems.crud.mapper.impl;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -19,6 +23,12 @@ import br.com.psystems.crud.model.Product;
  */
 public final class ProductMapper implements BaseMapper<Product> {
 	
+	public ProductMapper() {
+		super();
+	}
+
+//	private UnitMeasurementService service;
+	
 	@Override
 	public Product map(HttpServletRequest request) throws MapperException {
 		
@@ -30,13 +40,32 @@ public final class ProductMapper implements BaseMapper<Product> {
 			produto.setMininumQuantity(NumberUtils.createBigDecimal(request.getParameter("minquantity")));
 			produto.setOwnManufacturing(BooleanUtils.toBooleanObject(request.getParameter("ownmanufacturing")));
 			produto.setPrice(NumberUtils.createBigDecimal(request.getParameter("price")));
-			produto.setReferences(null);
-			produto.setTags(null);//FIXME desenvolver lógica do parse
 			produto.setUnitMeasurementId(NumberUtils.createLong(request.getParameter("unit")));
+			produto.setReferences(getReferencesFrom(request.getParameterValues("references")));
+			produto.setTags(getTagsFrom(request.getParameterValues("tags")));
+//			produto.setUnitMeasurement(getUnitBy(NumberUtils.createLong(request.getParameter("unit"))));
 			
 		} catch (Exception e) {
 			throw new MapperException(Constants.ERROR_MESSAGE_MAPPER_ERROR, e);
 		}
 		return produto;
+	}
+	
+	private Set<Long> getReferencesFrom(String[] referenceList) {
+		return Arrays.asList(referenceList).stream().map(Long::new).collect(Collectors.toSet());
+	}
+
+//	private UnitMeasurementService getService() throws DAOException {
+//		if (service == null)
+//			new UnitMeasurementServiceImpl(new UnitMeasurementDAOImpl());
+//		return service;
+//	}
+	
+//	private UnitMeasurement getUnitBy(Long id) throws DAOException, SystemException {
+//		return getService().findById(id);
+//	}
+	
+	private Set<String> getTagsFrom(String[] tagList) {
+		return Arrays.asList(tagList).stream().collect(Collectors.toSet());
 	}
 }

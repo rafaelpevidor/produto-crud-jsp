@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -249,14 +251,14 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 		return product;
 	}
 	
-	private List<String> getTags(final ResultSet rs) throws SQLException {
+	private Set<String> getTags(final ResultSet rs) throws SQLException {
 		String[] tagsStrArray = (String[]) rs.getArray("tags").getArray();
-		return Arrays.asList(tagsStrArray);
+		return Arrays.asList(tagsStrArray).stream().collect(Collectors.toSet());
 	}
 	
-	private List<Long> getReferences(final ResultSet rs) throws SQLException {
+	private Set<Long> getReferences(final ResultSet rs) throws SQLException {
 		Long[] referencesLongArray = (Long[]) rs.getArray("reference").getArray();
-		return Arrays.asList(referencesLongArray);
+		return Arrays.asList(referencesLongArray).stream().collect(Collectors.toSet());
 	}
 
 	private Array getTagsAsSQLArray(final Product entity, final Connection connection) throws SQLException {

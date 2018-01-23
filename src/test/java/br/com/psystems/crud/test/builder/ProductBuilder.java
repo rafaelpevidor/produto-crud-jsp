@@ -5,6 +5,8 @@ package br.com.psystems.crud.test.builder;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import br.com.psystems.crud.model.Product;
 import br.com.psystems.crud.model.UnitMeasurement;
@@ -31,13 +33,23 @@ public class ProductBuilder {
 		return this;
 	}
 	
-	public ProductBuilder setTags(List<String> tags) {
+	public ProductBuilder setTags(Set<String> tags) {
 		product.setTags(tags);
 		return this;
 	}
 	
-	public ProductBuilder setReferences(List<Long> references) {
+	public ProductBuilder setReferences(Set<Long> references) {
 		product.setReferences(references);
+		return this;
+	}
+	
+	public ProductBuilder setTagsList(List<String> tags) {
+		product.setTags(tags.stream().collect(Collectors.toSet()));
+		return this;
+	}
+	
+	public ProductBuilder setReferencesList(List<Long> references) {
+		product.setReferences(references.stream().map(Long::new).collect(Collectors.toSet()));
 		return this;
 	}
 	

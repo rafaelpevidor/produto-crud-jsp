@@ -9,6 +9,6 @@ import br.com.psystems.crud.model.Vendor;
  * @author developer
  *
  */
-public interface VendorService extends BaseService<Vendor> {
+public interface VendorService extends CrudService<Vendor> {
 
 }

@@ -23,7 +23,7 @@ import br.com.psystems.crud.model.dao.VendorDAO;
  * @author rafael.saldanha
  *
  */
-public class VendorDAOImpl extends AbstractDAO implements VendorDAO {
+public class VendorDAOImpl extends AbstractCrudDAO implements VendorDAO {
 
 	/**
 	 * 

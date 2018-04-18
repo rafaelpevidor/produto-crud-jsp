@@ -9,6 +9,6 @@ import br.com.psystems.crud.model.UnitMeasurement;
  * @author developer
  *
  */
-public interface UnitMeasurementService extends BaseService<UnitMeasurement> {
+public interface UnitMeasurementService extends CrudService<UnitMeasurement> {
 
 }

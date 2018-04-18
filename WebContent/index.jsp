@@ -3,9 +3,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Produto CRUD</title>
+<title>.: Stock :.</title>
 </head>
 <body>
-	<%response.sendRedirect("/produto-crud-jsp/app/fornecedor/lista.jsp"); %>
+	<% 
+        System.out.println(request.getContextPath());
+        response.sendRedirect(request.getContextPath()+"/login"); 
+    %>
 </body>
 </html>

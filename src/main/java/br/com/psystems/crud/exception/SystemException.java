@@ -7,7 +7,7 @@ package br.com.psystems.crud.exception;
  * @author developer
  *
  */
-public class SystemException extends Exception {
+public class SystemException extends AbstractException {
 
 	/**
 	 * 

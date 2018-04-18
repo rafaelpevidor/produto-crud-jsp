@@ -28,7 +28,7 @@ import br.com.psystems.crud.model.dao.ProductDAO;
  * @author rafael.saldanha
  *
  */
-public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
+public class ProductDAOImpl extends AbstractCrudDAO implements ProductDAO {
 
 	/**
 	 * 

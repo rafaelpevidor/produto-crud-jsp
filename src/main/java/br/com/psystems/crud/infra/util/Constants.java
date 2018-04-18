@@ -21,14 +21,16 @@ public class Constants {
 	public static final String MESSAGE_UPDATE_SUCCESS = "Atualizado com sucesso!";
 	public static final String MESSAGE_DELETE_SUCCESS = "Apagado com sucesso!";
 	
+	public static final String PAGE_LOGIN = "/WEB-INF/view/login.jsp";
+	public static final String PAGE_DASHBOARD = "/WEB-INF/view/app/dashboard.jsp";
 	public static final String PAGE_VENDOR_LIST = "/vendor/list.jsp";
 	public static final String PAGE_VENDOR_FORM = "/vendor/form.jsp";
 	public static final String PAGE_USER_LIST = "/user/list.jsp";
 	public static final String PAGE_USER_FORM = "/user/form.jsp";
 	public static final String PAGE_UNIT_LIST = "/unit/list.jsp";
 	public static final String PAGE_UNIT_FORM = "/unit/form.jsp";
-	public static final String PAGE_PRODUCT_LIST = "/product/list.jsp";
-	public static final String PAGE_PRODUCT_FORM = "/procut/form.jsp";
+	public static final String PAGE_PRODUCT_LIST = "/WEB-INF/view/app/product/list.jsp";
+	public static final String PAGE_PRODUCT_FORM = "/WEB-INF/view/app/procut/form.jsp";
 
 	public static final String CMD_ATTRIBUTE = "cmd";
 	
@@ -39,12 +41,12 @@ public class Constants {
 //	public static final String SEARCH_VENDOR = "5";
 //	public static final String LIST_VENDOR = "6";
 //	
-//	public static final String CREATE_PRODUCT = "7";
-//	public static final String RECOVER_PRODUCT = "8";
-//	public static final String UPDATE_PRODUCT = "9";
-//	public static final String DELETE_PRODUCT = "10";
-//	public static final String SEARCH_PRODUCT = "11";
-//	public static final String LIST_PRODUCT = "12";
+//	public static final String PRODUCT_CREATE = "7";
+//	public static final String PRODUCT_READ = "8";
+//	public static final String PRODUCT_UPDATE = "9";
+//	public static final String PRODUCT_DELETE = "10";
+//	public static final String PRODUCT_SEARCH = "11";
+//	public static final String PRODUCT_LIST = "12";
 //	
 //	public static final String CREATE_USER = "13";
 //	public static final String RECOVER_USER = "14";

@@ -10,7 +10,7 @@ import br.com.psystems.crud.model.Product;
  * @author developer
  *
  */
-public interface ProductService extends BaseService<Product> {
+public interface ProductService extends CrudService<Product> {
 
 	public void validateRequiredFieldByBusinessRuleOf(Product entity) throws BusinessException;
 }

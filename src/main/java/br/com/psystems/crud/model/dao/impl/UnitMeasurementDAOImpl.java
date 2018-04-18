@@ -23,7 +23,7 @@ import br.com.psystems.crud.model.dao.UnitMeasurementDAO;
  * @author rafael.saldanha
  *
  */
-public class UnitMeasurementDAOImpl extends AbstractDAO implements UnitMeasurementDAO {
+public class UnitMeasurementDAOImpl extends AbstractCrudDAO implements UnitMeasurementDAO {
 
 	/**
 	 * 

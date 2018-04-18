@@ -7,7 +7,7 @@ package br.com.psystems.crud.exception;
  * @author rafael.saldanha
  *
  */
-public class MapperException extends Exception {
+public class MapperException extends AbstractException {
 
 	/**
 	 * 
